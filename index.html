@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="app.css">
+
+</head>
+
+<body>
+
+
+    <!-- <audio src="./js/attack.mp3" autoplay="autoplay" loop=true id="myaudio" controls>
+
+        <code>audio</code> element.
+    </audio>
+
+    <script>
+        setInterval(function toggleSound() {
+
+            var music = document.getElementById("myaudio");
+            if (music.paused) {
+
+                music.paused = false;
+                music.play();
+            }
+        }, 5);
+    </script> -->
+
+    <video width="300" height="200" autoplay="autoplay" id="video" controls loop>
+        <source src="video/op.mp4" type="video/mp4">
+    </video>
+
+    <script>
+        setInterval(function toggleSound() {
+
+            var music = document.getElementById("video");
+            if (music.paused) {
+
+                music.paused = false;
+                music.play();
+            }
+        }, 5);
+    </script>
+
+
+    <div class="navigation" id="nav">
+
+        <button class="enter">
+            <a class="butt" href="about.html">
+                Introduction
+            </a>
+        </button>
+
+        <button class="enter">
+            <a class="butt" href="about.html">
+                About Us
+            </a>
+        </button>
+        <button class="enter">
+            <a class="butt" href="about.html">
+                Result
+            </a>
+        </button>
+        <button class="enter">
+            <a class="butt" href="about.html">
+                Conclusion
+            </a>
+        </button>
+        <button class="enter">
+            <a class="butt" href="about.html">
+                Contribution
+            </a>
+        </button>
+    </div>
+
+
+
+    <div>
+        <div id="BJ">
+            <img src="./js/images/images1.png" id="img" />
+
+
+            <script src="js/app.js"></script>
+</body>
+<!-- <iframe src="./js/attack.mp3" allow="autoplay" style="display: none;" id="iframe"></iframe> -->
+
+</html>

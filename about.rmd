@@ -1,0 +1,12 @@
+---
+title: "Hanfu Shi"
+---
+ 
+
+<br><img src="images/hanfu.png" alt="me" style="width:65%; border:10px solid"><br>
+  
+
+I am a columbia student of Public Health Data Science track in [Columbia University](https://www.columbia.edu/).  My expected graduation date is in May 2023. I want to be a software engineer or a data scientist after graduation.
+
+The road is rough and long, the world is creazy and mad. 
+I am calm like never stirred water.
