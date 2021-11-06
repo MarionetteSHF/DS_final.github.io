@@ -1,0 +1,51 @@
+
+.text{
+    width: 70%;
+    display: block;
+    font-size: 1.4em;
+    color:#f1ff5caf ;
+    /* border: aqua 1px dotted; */
+}
+
+body{
+    font-family: 'Roboto', sans-serif;
+    
+    background-color: #151b29;
+    
+
+}
+div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    height: 100vh;
+    
+}
+a {
+    font-size: 1em;
+    
+}
+button {
+    
+    background-color: rgba(243, 240, 255, 0.068);
+    color: #ffa260;
+    border: 2px solid;
+    border-bottom-right-radius: 50%;
+    padding: 0.8em 1.6em;
+    font-size: 3em;
+    transition:color 0.1s, border-color 0.2s;
+    
+}
+
+
+button:hover {
+    border-color: #f1ff5c;
+    color: rgba(203, 222, 230, 0.966);
+    box-shadow: 0em 0.5em 0.5em -0.4em #f1ff5c;
+    /* transform:translateY(0.25em)； */
+    transform:translate3d(0.25em);
+
+
+}
