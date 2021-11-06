@@ -46,12 +46,5 @@ rest_inspec %>%
   plot_ly(y = ~score, color = ~cuisine_description, type = "box", colors = "viridis")
 ```
 
-### Chart C
 
-```{r barchart}
-rest_inspec %>% 
-  count(cuisine_description) %>% 
-  mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
-  plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description, type = "bar", colors = "viridis", showlegend = FALSE)
-```
 
