@@ -1,4 +1,4 @@
-var content = "A few days ago, our team member Huili Zheng experienced a school bus delay, which caused her to be late for our first meeting and brought us cookies as an apology and her breakfast. However, no one eats the cookies during the three-hours meeting. This anecdote helped us realize: First, nobody likes to eat cookies for breakfast. Second, We all experienced a lot of school bus delays. What’s behind the delays? ";
+var content = "A few days ago, our team member Huili Zheng experienced a school bus delay, which caused her to be late for our first meeting and brought us cookies as an apology and her breakfast. However, no one ate the cookies during the three-hours meeting. This anecdote helped us realize: First, nobody likes to eat cookies for breakfast. Second, We all experienced a lot of school bus delays. What’s behind the delays?  ";
 var count = 0;
 var text = document.querySelector('.text')
 // var audio = document.querySelector('#myaudio');
