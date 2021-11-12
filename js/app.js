@@ -1,8 +1,8 @@
 var index = 0;
-var imgs = ["./js/images/images1.png", "./js/images/images2.png", "./js/images/images3.png",
-    "./js/images/images4.png", "./js/images/images5.png", "./js/images/images6.png"
-    , "./js/images/images7.png"
-    , "./js/images/images8.png"];
+var imgs = ["./js/images/image1.png", "./js/images/image2.png", "./js/images/image3.png",
+    "./js/images/image4.png", "./js/images/image5.png", "./js/images/image6.png"
+    , "./js/images/image7.png"
+    , "./js/images/image8.png"];
 
 var t = 1200;
 var set1 = setInterval("qiehuan()", t);

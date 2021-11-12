@@ -93,7 +93,7 @@ a {
   width: 100%;
 }
 .button {
-    
+  
   background-color: rgba(243, 240, 255, 0.068);
   color: #d119c8;
   border: 2px solid;
@@ -105,15 +105,18 @@ a {
 }
 #question{
   background-color:#343a40 ;
+  
 }
 #question p{
   font-size: 35px;
   display: flex;
   justify-content: center;
+  
  color: blueviolet;
 }
 #innerBox{
   display: flex;justify-content: center;
+  justify-content: space-around;
   margin: 10px;
 }
 button:hover {
