@@ -18,23 +18,48 @@ function qiehuan() {
     if (index > 7) {
         // index = 0;
 
+
         clearInterval(set1);
         return;
-
-
     }
-
     clearInterval(set1);
 
     set1 = setInterval("qiehuan()", t);
 }
 
-// setInterval("qiehuan()", 1000);
-
-// var myAuto = document.getElementById('audio');
-// myAuto.play();
 
 
+var button = document.querySelectorAll('.button')
+var audio = new Audio("./js/gentle.mp3");
+var video = document.getElementById("myaudio");
+
+for (bu of button) {
+    bu.addEventListener('click', function (e) {
+
+        var question = document.querySelector('#question');
+        question.remove();
+        audio.play();
+
+
+    })
+}
+
+
+video.addEventListener('click', function (e) {
+
+    audio.play()
+    if (video.paused) {
+        audio.pause();
+    }
+})
+// setInterval(function toggleSound() {
+
+//     if (music.paused) {
+
+//         music.paused = false;
+//         music.play();
+//     }
+// }, 5);
 
 
 

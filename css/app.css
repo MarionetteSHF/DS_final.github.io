@@ -1,43 +1,50 @@
-/* #video {
-  position: fixed; right: 0; bottom: 0;
+
+/* body{
   
-width: auto;
- height: auto;
-  z-index: -100;
-  background-size: cover;
 } */
 #imgAtitle{
   display: flex;
   align-items: center;
+  
 }
 
 #nav{
-  background-color: white;
+  font-weight: bold;
+  background-color: #343a40;
   /* opacity: 70%; */
   /* height: 50px; */
   /* border: rgba(0, 255, 128, 0.418) 2px solid; */
   /* display: ; */
+  height: 100px;
   display: flex;
   /* flex-direction: row-reverse; */
   justify-content: center;
   flex-grow: 1;
   flex-wrap: wrap;
+  align-items: center;
+  /* margin: 3px; */
+
 }
 a {
+  font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
    text-decoration: none;
-   color: black;
+   color: white;
+   
+   
 }
 
 
 
 .enter {
-   height: 50px;
-   width: 10%;
-   background-color: #ffffff6c;
+   height: 10%;
+   width: 15%;
+   background-color:#00d1b2 ;
    border: solid rgba(0, 0, 0, 0.144) 0.2px;
-   font-size: 140%;
+   border-radius: 4px;
+   font-size: 1.5em;
+   flex-wrap: wrap;
+   margin: 1px;
    
- 
 }
 
 .enter:hover {
@@ -46,6 +53,14 @@ a {
   box-shadow: 0em 0.5em 0.5em -0.4em #f1ff5c;
   /* transform:translateY(0.25em)； */
   transform:translate3d(0.25em);
+}
+.butt{
+  margin: 10px;
+  font-size: 1.3em;
+}
+#title{
+  font-size: 1.8em;
+  margin-right: 380px;
 }
 .butt:hover {
   
@@ -58,7 +73,7 @@ a {
 
 #BJ {
   opacity: 89%;
-  /*图片居中 */
+
 
   text-align: center;
 }
@@ -70,15 +85,45 @@ a {
   /* margin: 10px; */
 }
 
-#ol {
-  position: absolute;
-  /* 绝对定位 */
-  bottom: 85px;
-  /* 高度 */
+#content {
+  background-color: #444444;
+  
+  height: 50px;
+  margin-left: 0px;
+  margin-top: -7px;
+  padding: 0px;
   width: 100%;
-  /* 宽度 */
-  text-align: center;
-  /* 居中*/
-  right: 15px;
 }
+.button {
+    
+  background-color: rgba(243, 240, 255, 0.068);
+  color: #d119c8;
+  border: 2px solid;
+  /* border-bottom-right-radius: 50%; */
+  padding: 0.8em 1.6em;
+  font-size: 3em;
+  transition:color 0.1s, border-color 0.2s;
+  
+}
+#question{
+  background-color:#343a40 ;
+}
+#question p{
+  font-size: 35px;
+  display: flex;
+  justify-content: center;
+ color: blueviolet;
+}
+#innerBox{
+  display: flex;justify-content: center;
+  margin: 10px;
+}
+button:hover {
+  border-color: #d47a12;
+  color: rgba(203, 222, 230, 0.966);
+  box-shadow: 0em 0.5em 0.5em -0.4em #f1ff5c;
+  /* transform:translateY(0.25em)； */
+  transform:translate3d(0.25em);
 
+
+}
