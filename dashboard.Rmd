@@ -7,16 +7,7 @@ output:
     source: embed
     
 ---
-```{css}
-body{
-  background-color:red;
-}
 
-```
-
-```{html}
-<p>  this is html </p>
-```
 
 ```{r setup, include=FALSE}
 
