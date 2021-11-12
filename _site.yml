@@ -19,4 +19,4 @@ navbar:
       href: https://github.com/MarionetteSHF
 output:
   html_document:
-    theme: journal
+    theme: sandstone
