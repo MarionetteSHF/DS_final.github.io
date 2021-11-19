@@ -1,0 +1,32 @@
+---
+title: "wrangle data"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rvest)
+library(httr)
+```
+
+```{r}
+bus_df = read.csv("./data/Bus_Breakdown_and_Delays.csv")
+```
+
+```{r}
+## filter these two years
+bus_df %>%
+  janitor::clean_names() %>%
+  filter(school_year == c("2020-2021","2021-2022")) %>%
+  group_by(boro) %>%
+  count() 
+```
+
+```{r}
+## location 
+bus_df %>%
+  janitor::clean_names() %>%
+  filter(boro == "Manhattan") 
+```
+
