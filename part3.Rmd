@@ -1,0 +1,15 @@
+---
+title: "Part3"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+    code_folding: hide
+---
+
+```{r setup}
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+```
+
