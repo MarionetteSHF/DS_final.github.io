@@ -42,8 +42,7 @@ rest_inspec %>%
 ### Chart B
 
 ```{r boxplot}
-rest_inspec %>%
-  plot_ly(y = ~score, color = ~cuisine_description, type = "box", colors = "viridis")
+
 ```
 
 
