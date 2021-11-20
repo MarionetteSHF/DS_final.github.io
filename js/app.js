@@ -10,17 +10,17 @@ var set1 = setInterval("qiehuan()", t);
 
 function qiehuan() {
     document.getElementById("img").src = imgs[index];
-    t -= 80;
+    // t -= 80;
     index++;
-    if (t < 500) {
-        t = 500;
-    }
+    // if (t < 500) {
+    //     t = 500;
+    // }
     if (index > 7) {
-        // index = 0;
+        index = 0;
 
 
-        clearInterval(set1);
-        return;
+        // clearInterval(set1);
+        // return;
     }
     clearInterval(set1);
 
@@ -32,7 +32,7 @@ function qiehuan() {
 var button = document.querySelectorAll('.button')
 var audio = new Audio("./js/gentle.mp3");
 var video = document.getElementById("myaudio");
-
+var video2 = document.getElementById("video2");
 for (bu of button) {
     bu.addEventListener('click', function (e) {
 
@@ -45,10 +45,19 @@ for (bu of button) {
 }
 
 
-video.addEventListener('click', function (e) {
+video.addEventListener('onStateChange', function (e) {
+    audio.pause();
+    // video.remove();
+    // audio.play()
+    // if (video.paused) {
+    //     audio.pause();
+    // }
+})
+
+video2.addEventListener('click', function (e) {
 
     audio.play()
-    if (video.paused) {
+    if (video2.paused) {
         audio.pause();
     }
 })
