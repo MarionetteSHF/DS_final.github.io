@@ -26,9 +26,6 @@ function qiehuan() {
 
     set1 = setInterval("qiehuan()", t);
 }
-
-
-
 var button = document.querySelectorAll('.button')
 var audio = new Audio("./js/gentle.mp3");
 var video = document.getElementById("myaudio");
