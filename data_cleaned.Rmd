@@ -85,6 +85,6 @@ weather_df
 ```
 
 ```{r}
-left_join(df_date_manhattan, weather_df, by = "occur_date")
+bus_weather_df = left_join(df_date_manhattan, weather_df, by = "occur_date")
 ```
 
