@@ -1,0 +1,90 @@
+---
+title: "Untitled"
+author: "Qixiang Chen"
+date: "11/27/2021"
+output: html_document
+---
+
+
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(rvest)
+library(plotly)
+library(ggridges)
+library(readxl)
+library(patchwork)
+library(httr)
+library(lubridate)
+library(p8105.datasets)
+library(rnoaa)
+dataframe = 
+  Bus_Breakdown_and_Delays%>%
+  janitor::clean_names()
+dataframe
+```
+
+
+```{r}
+df_date_sep = 
+  dataframe %>%
+  separate(occurred_on, into = c("occur_date", "occur_time"), sep = 11) %>%
+  mutate(happen_date = occur_date,
+         date_noYear = occur_date) %>%
+  separate(happen_date, into = c("month", "day2", "year"), sep = "/") %>%
+  separate(date_noYear, into = c("date_noYear", "year2"), sep = 5) %>%
+  select(-day2) %>%
+  select(-year2) %>%
+  mutate(month = case_when(month == "01" ~ "January",
+                           month == "02" ~ "February",
+                           month == "03" ~ "March",
+                           month == "04" ~ "April",
+                           month == "05" ~ "May",
+                           month == "06" ~ "June",
+                           month == "07" ~ "July",
+                           month == "08" ~ "August",
+                           month == "09" ~ "September",
+                           month == "10" ~ "October",
+                           month == "11" ~ "November",
+                           month == "12" ~ "December")
+         ) %>%
+  relocate(year, occur_date, month, date_noYear)
+df_date_sep
+df_date_sep$occur_date = lubridate::mdy(df_date_sep$occur_date)
+df_date_sep
+df_date_sep$day <- weekdays(df_date_sep$occur_date)
+select(df_date_sep, occur_date, day)
+```
+
+```{r}
+df_date_manhattan = 
+  df_date_sep %>%
+  filter(boro == "Manhattan")
+df_date_manhattan
+```
+
+```{r}
+#selecting Central Park weather as a represent of Manhattan from ronaa dataset
+weather_df =
+  rnoaa::meteo_pull_monitors(
+    c("USW00094728"),
+    var = c("PRCP", "SNOW", "SNWD", "TMAX", "TMIN"),
+    date_min = "2018-09-05",
+    date_max = "2021-11-18") %>%
+  mutate(
+    name = recode(
+      id,USW00094728 = "CentralPark_NY"),
+    tmin = tmin / 10,
+    tmax = tmax / 10) %>%
+  rename(
+    occur_date = date
+  ) %>%
+  select(name, id, everything())
+weather_df
+```
+
+```{r}
+left_join(df_date_manhattan, weather_df, by = "occur_date")
+```
+
