@@ -55,6 +55,7 @@ df_date_sep =
   relocate(year, occur_date, month, date_noYear)
 
 df_date_sep$occur_date = lubridate::mdy(df_date_sep$occur_date)
+Sys.setlocale("LC_TIME", "English")
 df_date_sep$day = weekdays(df_date_sep$occur_date)
 
 ```
@@ -84,7 +85,7 @@ weather_df =
     occur_date = date
   ) %>%
   select(name, id, everything())
-weather_df
+
 ```
 
 ```{r}
