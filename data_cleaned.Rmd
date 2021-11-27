@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Data cleaning Process"
 author: "Qixiang Chen & Paulina Han"
 date: "11/27/2021"
 output: html_document
@@ -19,14 +19,17 @@ library(httr)
 library(lubridate)
 library(p8105.datasets)
 library(rnoaa)
-dataframe = 
-  Bus_Breakdown_and_Delays%>%
+
+```
+```{r}
+#load in the data
+dataframe = read_csv("data/Bus_Breakdown_and_Delays.csv")%>%
   janitor::clean_names()
-dataframe
 ```
 
 
 ```{r}
+#Adding data variable
 df_date_sep = 
   dataframe %>%
   separate(occurred_on, into = c("occur_date", "occur_time"), sep = 11) %>%
@@ -50,18 +53,18 @@ df_date_sep =
                            month == "12" ~ "December")
          ) %>%
   relocate(year, occur_date, month, date_noYear)
-df_date_sep
+
 df_date_sep$occur_date = lubridate::mdy(df_date_sep$occur_date)
-df_date_sep
-df_date_sep$day <- weekdays(df_date_sep$occur_date)
-select(df_date_sep, occur_date, day)
+df_date_sep$day = weekdays(df_date_sep$occur_date)
+
 ```
 
 ```{r}
+#manhanttan data only
 df_date_manhattan = 
   df_date_sep %>%
   filter(boro == "Manhattan")
-df_date_manhattan
+
 ```
 
 ```{r}
@@ -85,6 +88,7 @@ weather_df
 ```
 
 ```{r}
+#final data set
 bus_weather_df = left_join(df_date_manhattan, weather_df, by = "occur_date")
 ```
 
