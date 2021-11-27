@@ -1,6 +1,6 @@
 ---
 title: "Untitled"
-author: "Qixiang Chen"
+author: "Qixiang Chen & Paulina Han"
 date: "11/27/2021"
 output: html_document
 ---
