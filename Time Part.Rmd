@@ -25,7 +25,7 @@ options(
 )
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
-theme_set(theme_minimal() + theme(legend.position = "bottom"))
+theme_set(theme_minimal() + theme(legend.position = "right"))
 ```
 
 # Daily Delay Counts : from 9/15/2018 - 11/18/2021
@@ -49,13 +49,38 @@ plot_df %>%
   geom_smooth(se = FALSE) +
   facet_grid(~school_year,scales = "free") + 
   labs(
-    title = "Daily School Bus Delay Counts in Manhattan: 2018-2021 school year",
+    title = "Daily School Bus Delay Counts in Manhattan",
     x = "Date",
     y = "Counts"
   ) +
   theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1))
   
 
+
+```
+
+
+Lets Look at The Distribution of Delay Times in Each School Year
+
+```{r}
+
+delay_time_dist = 
+  plot_df %>% 
+  ggplot(aes(x = how_long_delayed,fill = how_long_delayed))+
+    geom_bar(position = "dodge")+
+  facet_grid(~school_year,scales = "free") + 
+  labs(
+    title = "Distribution of School Bus Delay Time in Manhattan",
+    x = "Delay Time",
+    y = "Counts"
+  )+
+  theme(axis.title.x = element_blank(),axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 0.5)) + 
+  guides(fill=guide_legend(title="Delay Time"))
+
+ggplotly(delay_time_dist)
+```
+
+```{r}
 
 ```
 
