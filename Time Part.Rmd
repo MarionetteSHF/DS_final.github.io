@@ -80,7 +80,23 @@ delay_time_dist =
 ggplotly(delay_time_dist)
 ```
 
-```{r}
+lets now overlap the school bus delay counts within each school year 
 
+```{r}
+#overlaping each year's daily delay counts
+plot_df %>% 
+ group_by(occur_date) %>% 
+  mutate(delay_count = n(),
+         day_of_month = lubridate::mday(occur_date),
+         common_day = lubridate::mdy(paste(month, day_of_month,"2021")))%>%
+  ggplot(aes(x = common_day, y = delay_count, group = school_year, color = school_year)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) + 
+  labs(
+    title = "School Bus Delay in Manhattan",
+    x = "Month",
+    y = "Delay Counts"
+    ) +
+  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b")) 
 ```
 
