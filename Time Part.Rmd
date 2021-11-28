@@ -1,0 +1,61 @@
+---
+title: "Trend of School Bus Delay Over Time"
+subtitle: "Bike use and bike and microvehicles crashes over time"
+date: 
+output: 
+  html_document:
+    code_folding: hide
+    always_allow_html: true
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+
+
+knitr::opts_chunk$set(
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+```
+
+# Daily Delay Counts : from 9/15/2018 - 11/18/2021
+
+```{r}
+#read data in
+df = read_csv("data/clean_data.csv")
+
+#plot data: drop NA rows
+plot_df = df %>% 
+  select(school_year, year, how_long_delayed,occur_date, day, month,busbreakdown_id) %>% 
+  na.omit()
+
+#plot daily delay counts
+
+plot_df %>% 
+  group_by(occur_date) %>% 
+  summarise(delay_count = n(),school_year) %>% 
+  ggplot(aes(x = occur_date, y = delay_count)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(~school_year,scales = "free") + 
+  labs(
+    title = "Daily School Bus Delay Counts in Manhattan: 2018-2021 school year",
+    x = "Date",
+    y = "Counts"
+  ) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1))
+  
+
+
+```
+
