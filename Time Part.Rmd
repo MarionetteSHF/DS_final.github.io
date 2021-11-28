@@ -98,7 +98,7 @@ overlaping_plot = plot_df %>%
     x = "Month",
     y = "Delay Counts"
     ) +
-  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b")) 
+  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b"))+ guides(fill=guide_legend(title="School Year"))
 
 ggplotly(overlaping_plot)
 ```
