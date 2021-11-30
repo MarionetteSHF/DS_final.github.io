@@ -10,7 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 library(tidyverse)
-
+library(plotly)
 
 knitr::opts_chunk$set(
 	echo = TRUE,
@@ -26,6 +26,8 @@ options(
 scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 theme_set(theme_minimal() + theme(legend.position = "right"))
+
+Sys.setlocale("LC_TIME", "English")
 ```
 
 # Daily Delay Counts : from 9/15/2018 - 11/18/2021
