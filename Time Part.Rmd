@@ -8,6 +8,12 @@ output:
     always_allow_html: true
 ---
 
+# Trends of School Bus Delay Over School years
+
+## School Bus Delay Frequency and Time over School Years in Manhattan
+
+On this page we will give you a bird-eye-view of school bus delay in Manhattan from 2018 Fall to 2021 Fall. We aims to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid data which will be interesting to look at ! Now lets dive right into it!
+
 ```{r setup, include=FALSE}
 library(tidyverse)
 library(plotly)
