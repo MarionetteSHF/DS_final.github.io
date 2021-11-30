@@ -8,11 +8,6 @@ output:
     always_allow_html: true
 ---
 
-# Trends of School Bus Delay Over School years
-
-## School Bus Delay Frequency and Time over School Years in Manhattan
-
-On this page we will give you a bird-eye-view of school bus delay in Manhattan from 2018 Fall to 2021 Fall. We aims to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid data which will be interesting to look at ! Now lets dive right into it!
 
 ```{r setup, include=FALSE}
 library(tidyverse)
@@ -36,10 +31,17 @@ theme_set(theme_minimal() + theme(legend.position = "right"))
 Sys.setlocale("LC_TIME", "English")
 ```
 
+# Trends of School Bus Delay Over School years
+
+## School Bus Delay Frequency and Time over School Years in Manhattan
+
+On this page we will give you a bird-eye-view of school bus delay in Manhattan from 2018 Fall to 2021 Fall. We aims to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid data which will be interesting to look at ! Now lets dive right into it!
 
 
 
 # Daily Delay Counts : from 9/15/2018 - 11/18/2021
+
+First,we would like to get a general view of the frequency of school bus delay in Manhattan from the fall semester 2018 to most recently. As we can see from the plot below, Covid-19 has a huge impact on the school bus delay over the time. Before the pandemic(2018-2020), we can see that the school buses are more likely to delay in the fall semester than the spring semesters especially during December and January. This may be caused by extreme weather in the winter and the heavy traffic during holiday seasons.In 2020-2021 when most schools switched online to cope with the pandemic , we can see there is striking low school bus delay. This is not hard to understand given there are less school bus route running and less cars on streets due to lock down and social distancing. In the fall of 2021, schools are switching back to in-person mode with the effort of vaccine enforcement and all other precautions taken, the school bus delay has a similar distribution as the pre-pandemic distribution.
 
 ```{r}
 #read data in
@@ -69,6 +71,26 @@ plot_df %>%
 
 
 ```
+```{r}
+#overlaping each year's daily delay counts
+
+overlaping_plot = plot_df %>% 
+ group_by(occur_date) %>% 
+  mutate(delay_count = n(),
+         day_of_month = lubridate::mday(occur_date),
+         common_day = lubridate::mdy(paste(month, day_of_month,"2021")))%>%
+  ggplot(aes(x = common_day, y = delay_count, group = school_year, color = school_year)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) + 
+  labs(
+    title = "School Bus Delay in Manhattan",
+    x = "Month",
+    y = "Delay Counts"
+    ) +
+  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b"))+ guides(fill=guide_legend(title="School Year"))
+
+ggplotly(overlaping_plot)
+```
 
 
 Lets Look at The Distribution of Delay Times in Each School Year
@@ -93,26 +115,6 @@ ggplotly(delay_time_dist)
 
 lets now overlap the school bus delay counts within each school year 
 
-```{r}
-#overlaping each year's daily delay counts
-
-overlaping_plot = plot_df %>% 
- group_by(occur_date) %>% 
-  mutate(delay_count = n(),
-         day_of_month = lubridate::mday(occur_date),
-         common_day = lubridate::mdy(paste(month, day_of_month,"2021")))%>%
-  ggplot(aes(x = common_day, y = delay_count, group = school_year, color = school_year)) +
-  geom_point(alpha = .3) +
-  geom_smooth(se = FALSE) + 
-  labs(
-    title = "School Bus Delay in Manhattan",
-    x = "Month",
-    y = "Delay Counts"
-    ) +
-  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b"))+ guides(fill=guide_legend(title="School Year"))
-
-ggplotly(overlaping_plot)
-```
 
 
 
