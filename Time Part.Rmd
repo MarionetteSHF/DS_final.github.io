@@ -105,3 +105,59 @@ overlaping_plot = plot_df %>%
 ggplotly(overlaping_plot)
 ```
 
+
+
+Plot4:
+```{r}
+df_date_weather_na = 
+  df %>%
+  drop_na(how_long_delayed) %>%
+  mutate(
+    month = forcats::fct_relevel(as.factor(month), "September", "October", "November", "December", "January", "February", "March", "April", "May", "June"),
+    day = forcats::fct_relevel(as.factor(day), "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+  ) %>%
+  filter(!(school_year == "2021-2022"))
+df_date_weather_na
+
+df_date_weather_plot = 
+  df_date_weather_na %>%
+  group_by(month, how_long_delayed, school_year) %>%
+  summarize(n_obs = n()) %>%
+  mutate(how_long_delayed = forcats::fct_relevel(as.factor(how_long_delayed), "0-15 Min", "16-30 Min", "31-45 Min", "46-60 Min", "61-90 Min")
+         )
+
+p1 = ggplot(df_date_weather_plot, aes(x = month, y = n_obs)) + 
+  geom_col(alpha = 0.6) + 
+  facet_grid(~how_long_delayed) +
+  geom_line(aes(group = school_year, color = school_year)) + 
+  labs(
+    x = "month",
+    y = "counts",
+    title = "the monthly distribution for different length of time"
+  ) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+ggplotly(p1)
+```
+
+
+
+Plot5:
+```{r}
+df_date_weather_plot2 =
+  df_date_weather_na %>%
+  group_by(day, school_year, how_long_delayed) %>%
+  summarize(n_obs = n())
+
+p2 = ggplot(df_date_weather_plot2, aes(x = day, y = n_obs)) + 
+  geom_col(alpha = 0.6) + 
+  facet_grid(~school_year) +
+  labs(
+    x = "weekday",
+    y = "counts",
+    title = "the daily distribution for different length of time"
+  ) + 
+  geom_line(aes(group = how_long_delayed, color = how_long_delayed)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+ggplotly(p2)
+```
+
