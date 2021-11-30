@@ -100,7 +100,9 @@ ggplotly(overlaping_plot)
 ```
 
 
-Lets Look at The Distribution of Delay Times in Each School Year
+##  Distribution of Delay Times in Each School Year
+
+Except for the frequency of school bus delay, students like us also care about the delay time of the school bus. Surprisingly, we see that the most majority delays take about 31 - 45 minuets before the pandemic.Though we have lower frequency of bus delay after the pandemic, the majority of the bus delay takes about 46-60 minuets. For Student, this might not be as bad as it looks.The overall probability of being late due to school bus delay should decrease, though they may be late for a longer period of time given each delay they run into.
 
 ```{r}
 
