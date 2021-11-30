@@ -72,6 +72,11 @@ plot_df %>%
 
 ```
 
+## Overlay years
+
+Now we want to take a closer look at the counts of school bus delay in each month and compare the school years over 2018 to 2021.
+
+First we can see that except for the 2020-2021 school year , we have a similar trend for school bus delay distribution from January to December. The school bus delay is more frequent in the winter from November to the Next February. The frequency of school bus delay is decreasing in number over the years. We are happy tp see that the NY school bus system is improving on the overall level. The school bus system is probability shut down or has limited routes operating given the lock down in 2020-2021. There is less than 100 delays each month in those days.
 
 ```{r}
 #overlaping each year's daily delay counts
