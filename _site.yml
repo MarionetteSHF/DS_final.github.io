@@ -4,7 +4,7 @@ navbar:
   title: "Home"
   right:
     - text: "Time-Part"
-      href: Time-part.html
+      href: Time-Part.html
     - text: "map"
       href: map.html
     - text: "reason-part"
