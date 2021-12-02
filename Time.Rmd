@@ -1,0 +1,183 @@
+---
+title: "Trend of School Bus Delay Over Time"
+subtitle: "Bike use and bike and microvehicles crashes over time"
+date: 
+output: 
+  html_document:
+    code_folding: hide
+    always_allow_html: true
+---
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(plotly)
+
+knitr::opts_chunk$set(
+	echo = TRUE,
+	warning = FALSE,
+	fig.width = 8, 
+  fig.height = 6,
+  out.width = "90%"
+)
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis"
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+theme_set(theme_minimal() + theme(legend.position = "right"))
+
+Sys.setlocale("LC_TIME", "English")
+```
+
+# Trends of School Bus Delay Over School years
+
+## School Bus Delay Frequency and Time over School Years in Manhattan
+
+On this page we will give you a bird-eye-view of school bus delay in Manhattan from 2018 Fall to 2021 Fall. We aims to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid data which will be interesting to look at ! Now lets dive right into it!
+
+
+
+# Daily Delay Counts : from 9/15/2018 - 11/18/2021
+
+First,we would like to get a general view of the frequency of school bus delay in Manhattan from the fall semester 2018 to most recently. As we can see from the plot below, Covid-19 has a huge impact on the school bus delay over the time. Before the pandemic(2018-2020), we can see that the school buses are more likely to delay in the fall semester than the spring semesters especially during December and January. This may be caused by extreme weather in the winter and the heavy traffic during holiday seasons.In 2020-2021 when most schools switched online to cope with the pandemic , we can see there is striking low school bus delay. This is not hard to understand given there are less school bus route running and less cars on streets due to lock down and social distancing. In the fall of 2021, schools are switching back to in-person mode with the effort of vaccine enforcement and all other precautions taken, the school bus delay has a similar distribution as the pre-pandemic distribution.
+
+```{r}
+#read data in
+df = read_csv("data/clean_data.csv")
+
+#plot data: drop NA rows
+plot_df = df %>% 
+  select(school_year, year, how_long_delayed,occur_date, day, month,busbreakdown_id) %>% 
+  na.omit()
+
+#plot daily delay counts
+
+plot_df %>% 
+  group_by(occur_date) %>% 
+  summarise(delay_count = n(),school_year) %>% 
+  ggplot(aes(x = occur_date, y = delay_count)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) +
+  facet_grid(~school_year,scales = "free") + 
+  labs(
+    title = "Daily School Bus Delay Counts in Manhattan",
+    x = "Date",
+    y = "Counts"
+  ) +
+  theme(axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 1))
+  
+
+
+```
+
+## Overlay years
+
+Now we want to take a closer look at the counts of school bus delay in each month and compare the school years over 2018 to 2021.
+
+First we can see that except for the 2020-2021 school year , we have a similar trend for school bus delay distribution from January to December. The school bus delay is more frequent in the winter from November to the Next February. The frequency of school bus delay is decreasing in number over the years. We are happy tp see that the NY school bus system is improving on the overall level. The school bus system is probability shut down or has limited routes operating given the lock down in 2020-2021. There is less than 100 delays each month in those days.
+
+```{r}
+#overlaping each year's daily delay counts
+
+overlaping_plot = plot_df %>% 
+ group_by(occur_date) %>% 
+  mutate(delay_count = n(),
+         day_of_month = lubridate::mday(occur_date),
+         common_day = lubridate::mdy(paste(month, day_of_month,"2021")))%>%
+  ggplot(aes(x = common_day, y = delay_count, group = school_year, color = school_year)) +
+  geom_point(alpha = .3) +
+  geom_smooth(se = FALSE) + 
+  labs(
+    title = "School Bus Delay in Manhattan",
+    x = "Month",
+    y = "Delay Counts"
+    ) +
+  scale_x_date(date_breaks = "1 month", labels = function(x) format(x, "%b"))+ guides(fill=guide_legend(title="School Year"))
+
+ggplotly(overlaping_plot)
+```
+
+
+##  Distribution of Delay Times in Each School Year
+
+Except for the frequency of school bus delay, students like us also care about the delay time of the school bus. Surprisingly, we see that the most majority delays take about 31 - 45 minuets before the pandemic.Though we have lower frequency of bus delay after the pandemic, the majority of the bus delay takes about 46-60 minuets. For Student, this might not be as bad as it looks.The overall probability of being late due to school bus delay should decrease, though they may be late for a longer period of time given each delay they run into.
+
+```{r}
+
+delay_time_dist = 
+  plot_df %>% 
+  ggplot(aes(x = how_long_delayed,fill = how_long_delayed))+
+    geom_bar(position = "dodge")+
+  facet_grid(~school_year,scales = "free") + 
+  labs(
+    title = "Distribution of School Bus Delay Time in Manhattan",
+    x = "Delay Time",
+    y = "Counts"
+  )+
+  theme(axis.title.x = element_blank(),axis.text.x = element_text(angle = 60, vjust = 0.5, hjust = 0.5)) + 
+  guides(fill=guide_legend(title="Delay Time"))
+
+ggplotly(delay_time_dist)
+```
+
+lets now overlap the school bus delay counts within each school year 
+
+
+
+
+Plot4:
+```{r}
+df_date_weather_na = 
+  df %>%
+  drop_na(how_long_delayed) %>%
+  mutate(
+    month = forcats::fct_relevel(as.factor(month), "September", "October", "November", "December", "January", "February", "March", "April", "May", "June"),
+    day = forcats::fct_relevel(as.factor(day), "Monday", "Tuesday", "Wednesday", "Thursday", "Friday")
+  ) %>%
+  filter(!(school_year == "2021-2022"))
+df_date_weather_na
+
+df_date_weather_plot = 
+  df_date_weather_na %>%
+  group_by(month, how_long_delayed, school_year) %>%
+  summarize(n_obs = n()) %>%
+  mutate(how_long_delayed = forcats::fct_relevel(as.factor(how_long_delayed), "0-15 Min", "16-30 Min", "31-45 Min", "46-60 Min", "61-90 Min")
+         )
+
+p1 = ggplot(df_date_weather_plot, aes(x = month, y = n_obs)) + 
+  geom_col(alpha = 0.6) + 
+  facet_grid(~how_long_delayed) +
+  geom_line(aes(group = school_year, color = school_year)) + 
+  labs(
+    x = "month",
+    y = "counts",
+    title = "the monthly distribution for different length of time"
+  ) + 
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+ggplotly(p1)
+```
+
+
+
+Plot5:
+```{r}
+df_date_weather_plot2 =
+  df_date_weather_na %>%
+  group_by(day, school_year, how_long_delayed) %>%
+  summarize(n_obs = n())
+
+p2 = ggplot(df_date_weather_plot2, aes(x = day, y = n_obs)) + 
+  geom_col(alpha = 0.6) + 
+  facet_grid(~school_year) +
+  labs(
+    x = "weekday",
+    y = "counts",
+    title = "the daily distribution for different length of time"
+  ) + 
+  geom_line(aes(group = how_long_delayed, color = how_long_delayed)) +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+ggplotly(p2)
+```
+
