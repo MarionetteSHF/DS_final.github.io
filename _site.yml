@@ -5,10 +5,10 @@ navbar:
   right:
     - text: "Time-part"
       href: Time-part.html
-    - text: "Part2"
-      href: dashboard.html
-    - text: "Part3"
-      href: Part3.html
+    - text: "map"
+      href: map.html
+    - text: "reason-part"
+      href: Reasons-for-bus-delay.html
     - text: "Report"
       href: Report.html
     - icon: fa-github fa-lg
