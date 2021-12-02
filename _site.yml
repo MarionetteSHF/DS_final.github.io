@@ -3,8 +3,8 @@ output_dir: "."
 navbar:
   title: "Home"
   right:
-    - text: "Part1"
-      href: plotly.html
+    - text: "Time-part"
+      href: Time-part.html
     - text: "Part2"
       href: dashboard.html
     - text: "Part3"
