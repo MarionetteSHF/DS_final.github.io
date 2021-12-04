@@ -68,6 +68,7 @@ a {
   font-size: 1.8em;
   margin-right: 12%;
   margin-left: 3%;
+  color: #F8991D;
 }
 .butt:hover {
   
@@ -147,11 +148,12 @@ button:hover {
   padding-top: 10px;
 }
 .intro{
-  font-size: 1.4em;
+  font-size: 1.3em;
   font-weight: 500;
   font-family: BlinkMacSystemFont,-apple-system,"Segoe UI",Roboto,Oxygen,Ubuntu,Cantarell,"Fira Sans","Droid Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
   width: 30%;
   padding-right: 20px;
+  color:#f58e08cc ;
 }
 #v2{
   margin-top: 20px;
