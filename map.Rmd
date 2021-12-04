@@ -6,6 +6,7 @@ output:
     toc: true
     toc_float: true
     always_allow_html: true
+    css: style.css
 ---
 
 ```{r setup, include=FALSE}
