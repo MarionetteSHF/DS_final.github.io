@@ -15,7 +15,7 @@ function qiehuan() {
     // if (t < 500) {
     //     t = 500;
     // }
-    if (index > 7) {
+    if (index > 5) {
         index = 0;
 
 
