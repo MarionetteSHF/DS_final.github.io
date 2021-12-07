@@ -1,0 +1,79 @@
+---
+title: "wrangle data for map"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(rvest)
+library(httr)
+```
+
+```{r}
+# import data
+delay_df = read_csv("./data/clean_data.csv") %>%
+  janitor::clean_names() 
+
+opt_df1 = read_csv("./data/prek-vendors-by-transportation-site-1.csv") %>%
+  janitor::clean_names() %>%
+  select(c('school_year','opt_code','school_name'))
+opt_df2 = read_csv("./data/transportation-sites-1.csv") %>%
+  janitor::clean_names() %>%
+  select(c('school_year','opt_code','name','longitude','latitude','city')) %>%
+  rename(school_name = name)
+
+# join opt and clean
+opt_df = merge(opt_df1,opt_df2,by = c('opt_code','school_year','school_name'), all=TRUE) %>%
+  distinct(school_name, .keep_all = TRUE) %>%
+  drop_na()
+
+delay_df = 
+  delay_df %>%
+  select(c('schools_serviced','how_long_delayed')) %>%
+  drop_na() 
+
+# separate the opt_code and create the new dataframe
+extract_code = function(x) {
+  df = delay_df[1,]
+  if (str_detect(delay_df[['schools_serviced']][x],",")) {
+    list = unlist(strsplit(delay_df[['schools_serviced']][x],","))
+    for (i in list) {
+      df_new = data.frame(i, delay_df[['how_long_delayed']][x])
+      df = rbind(df, df_new)
+    }
+    
+    } else {
+    df = rbind(df,delay_df[x,])
+    }
+  return(df)
+}
+
+df = delay_df[1,]
+for (x in 1:nrow(delay_df)) {
+  
+  if (str_detect(delay_df[['schools_serviced']][x],",")) {
+    list = unlist(strsplit(delay_df[['schools_serviced']][x],","))
+    for (i in list) {
+      schools_serviced = i
+      how_long_delayed = delay_df[['how_long_delayed']][x]
+      df_new = data.frame(schools_serviced, how_long_delayed)
+      
+      df = rbind(df, df_new)
+    }
+    
+    } else {
+    df = rbind(df,delay_df[x,])
+    }
+}
+df = df %>%
+  distinct() %>%
+  rename(opt_code = schools_serviced)
+
+# merge opt and delay dataframes
+opt_delay = merge(opt_df, df, by = 'opt_code', .keep_all = TRUE)
+write_csv(opt_delay,"./data/opt_delay.csv")
+
+```
+```
+

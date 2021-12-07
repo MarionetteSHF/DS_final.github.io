@@ -29,9 +29,6 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -63,6 +60,7 @@ if (window.hljs) {
 
 
 
+<link rel="stylesheet" href="style.css" type="text/css" />
 
 
 
@@ -227,69 +225,6 @@ $(document).ready(function () {
 
 
 
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-@media print {
-.toc-content {
-  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
-  float: right;
-}
-}
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-
 
 </head>
 
@@ -297,16 +232,6 @@ div.tocify {
 
 
 <div class="container-fluid main-container">
-
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -327,13 +252,13 @@ div.tocify {
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="plotly.html">Part1</a>
+  <a href="Time.html">Time-Part</a>
 </li>
 <li>
-  <a href="dashboard.html">Part2</a>
+  <a href="map.html">map</a>
 </li>
 <li>
-  <a href="Part3.html">Part3</a>
+  <a href="Reasons-for-bus-delay.html">reason-part</a>
 </li>
 <li>
   <a href="Report.html">Report</a>
@@ -370,78 +295,17 @@ div.tocify {
 <h1>Motivation (temporarily done by Hanfu )</h1>
 <p>The cookies anecdote is fun but the school bus delay is a serious issue. The council of the city of New York states that every year starts with a higher rate of delays caused by major traffic because the department of education has not equipped bus companies or drivers with information early enough for drivers to familiarize themselves with their route and map out their timing. Also, it is unconscionable that year after year, the Department of Education’s insufficient planning is exacerbating the stress felt by families starting a new school year. We were interested in exploring factors that cause school bus delay and understand the major reason behind bus delay. Distribution of bus delay is also what we want to figure out.</p>
 </div>
-<div id="related-work" class="section level1">
-<h1>Related Work</h1>
+<div id="related-worktemporarily-done-by-hanfu" class="section level1">
+<h1>Related Work(temporarily done by Hanfu )</h1>
 <p>According to an analysis by <a href="https://ny.chalkbeat.org/2021/9/13/22672760/school-buses-leave-nyc-students-stranded-on-first-day">Chalkbeat in partnership with the CITY</a>, busing complaints have grown in recent years. In 2019, there were an average of 500 delays a day druing the first weeks of school, which was up 5% from a year before.We realized that school bus delay is a serious issue after reading their work.</p>
 </div>
 <div id="data" class="section level1">
 <h1>Data</h1>
-<div id="polling-and-key-events-data" class="section level4">
-<h4><em>Polling and Key Events Data</em></h4>
-<p>National and state level polling for all candidates from January 24, 2019 to November 3, 2019 were obtained from FiveThirtyEight. These data contained information on the ranking of the poll (letter grades). Data was cleaned to include only polls with a grade of A or A+ and only democratic candidates that participated in each of the four debates. A mean polling percent was taken from all remaining polls for each available time point. Additional data on key campaign events were obtained from news sources such as the New York Times, Vox, Politico, and The Cut.</p>
-</div>
-<div id="debate-indicators-data" class="section level4">
-<h4><em>Debate Indicators Data</em></h4>
-<p>For the plots included in the dashboard, polling data was filtered to include only the polls directly before and directly after the fourth primary debate. A percent change variable was created to show the change in polling numbers before and after the debate.</p>
-<p>Trump mentions and words spoken per candidate were scraped from <a href="https://fivethirtyeight.com/features/the-october-democratic-debate-in-6-charts/">FiveThirtyEight</a> using <code>rvest</code>.</p>
-<p>Airtime was scraped from <a href="https://en.wikipedia.org/wiki/2020_Democratic_Party_presidential_debates_and_forums">Wikipedia</a> using <code>rvest</code>.</p>
-<p>Data on candidate attacks during the debate was taken from <a href="https://www.nbcnews.com/politics/2020-election/fourth-democratic-debate-2020-attack-tracker-graphic-n1066701">NBC News</a>. Data were presented in graphic form and were therefore entered into a .CSV file manually due to scraping difficulties. The data were checked by all team members to ensure no mistakes were made.</p>
-<p>The resulting dataframes were filtered to include only the candidates of interest for this project and joined to create a single dataframe including polling percent change and all debate variables of interest.</p>
-</div>
-<div id="google-trends-data" class="section level4">
-<h4><em>Google Trends Data</em></h4>
-<p>Google trends data were acquired using the gtrendsR package. Search queries were selected using keywords from the debate events, Google’s ‘Related’ and ‘Suggested’ features, and ideas presented by Stephens-Davidowitz in Everybody Lies. Queries pulled with quotation marks include all searches that contain the queried words in that exact order, and queries without quotation marks include all searches that contain the queried words in any order. Quotation marks were only used when exact ordering was needed. In the rare circumstance that a query had a value of &lt;1% for a particular day, the &lt;1% was approximated as 0.5 to allow for search proportion to be treated as a numeric variable.</p>
-</div>
-</div>
-<div id="exploratory-analysis" class="section level1">
-<h1>Exploratory Analysis</h1>
-<p>We explored the relationship between key campaign events including controversies, medical events, and endorsements and a candidate’s polling performance. The list of candidates was narrowed down to the three frontrunner candidates with most of the media coverage. We had originally planned to look at each candidate but it became difficult to find major campaign events for low polling candidates. We also decided to look into the relationship between the number of endorsements per candidate and their current polling performance after reading additional research on how well the number of endorsements predicts nomination to the general election. It is hard to determine whether these events were truly the reason for a drop or gain in polling percent because other factors such as debate performance, candidate fatigue and advertising and therefore our analysis is purely exploratory.</p>
-<p>We also discussed several approaches to the exploratory analysis of debate factors affecting polling performance. Originally, we chose an approach in which we would compile debate indicators across debates one through four and examine their association with candidates’ polling percent change over that time period. However, we realized that many other factors besides debate-related variables were likely to affect polling numbers over that period of time. We ultimately decided to focus on the fourth debate because we believe the percent change in polling numbers directly before and after a single debate is more likely to reflect debate performance.</p>
-<p>Although we believe focusing on one debate is valuable, we anticipated that it may be difficult to observe meaningful trends due to the small sample size. Additionally, we understand that certain debate-related factors that influence voting behavior may be less quantifiable than variables such as airtime and Trump mentions. We therefore chose to explore Google Search behavior as a secondary indicator of the impact that debate performance has on public perceptions of Democratic presidential candidates. We decided to choose key events from each debate to look at using Google Search behavior in the days immediately following the debates. These events were as follows: Kamala Harris’ comments toward Joe Biden in the first debate about his previous opposition to school busing programs, Bernie Sanders’ memorable comment that he “wrote the damn bill” in the second debate, Beto O’Rourke’s comment of “hell yes” to gun buy-back programs in the third debate, and Andrew Yang and Kamala Harris bringing up Universal Basic Income and reproductive rights, respectively, in the fourth debate. We also decided to compare Yang and Harris after the fourth debate to further compare their debate performances. We initially thought about instead looking at the 24 hours preceding and following the debates. However, we realized that a longer timeframe would give us a better understanding of behavior changes by allowing us to see if they were sustained over time so we looked at daily data for the week preceding and following each debate. Analysis was very exploratory in nature, and search volume was visualized using spaghetti plots.</p>
-<p>Finally, there is significant interest in which democratic candidate will eventually go head to head with President Trump in the 2020 presidential election, so we explored polling results in two key states, IA and PA. The list of candidates was limited to the four polling highest in the states who are still in the race: Biden, Sanders, Warren, and Buttigieg. It became difficult to assess polling for candidates in Pennsylvania as opposed to Iowa, as polling data for several candidates was not as varied, which means the spread of polling results was not easily visualizable. This may be due to voters not having as clear of a picture of who will be a realistic contender that late in the race, as Pennsylvania’s primary will happen in April, as opposed to Iowa’s early February caucus. In addition to looking at Google Search behavior following debates at the national level, we also explored how searches for these top candidates varied (or didn’t) between the two states over the course of this year to see if voters exhibited a strong interest or preference in any particular candidate and if these fluctuations coincided with key events like debates.</p>
-</div>
-<div id="additional-analysis" class="section level1">
-<h1>Additional Analysis</h1>
-<p>This project was intended to provide useful real-world insight into factors that may be affecting perceptions of candidates in the upcoming 2020 presidential election. Given our decision to focus on this election, many of our analyses do not have a great enough sample size to support further confirmatory analysis and regression; this would require a compilation of data from numerous election cycles. Therefore, these analyses were purely exploratory and no further analysis was conducted.</p>
-</div>
-<div id="discussion" class="section level1">
-<h1>Discussion</h1>
-<div id="key-events" class="section level4">
-<h4><em>Key Events</em></h4>
-<p>Key campaign events were associated with changes in polling status for several candidates:</p>
-<ul>
-<li><p>Flores’s essay about Joe Biden’s inappropriate touching coincided with one of his largest drops in the polls, while the conspiracy theory about his involvement in Ukraine occurred right before his biggest gain in the polls. The Feinstein endorsement occurred shortly before the former Vice President saw a gain in the polls but this was short-lived.</p></li>
-<li><p>Elizabeth Warren has seen mostly consistent gains in the polls since announcing her bid for the presidency so it is more difficult to determine how events may have impacted her polling performance. One of the only drops in her polling after an event captured in our data was after her apology for the release of her ancestry results, but this was quickly followed by an increase in the polls around the same time as her endorsement from the Working Family Party. Due to the lack of polling information after the New York Times article on Warren’s time as a corporate lawyer, it is hard to tell whether this impacted her polling performance.</p></li>
-<li><p>With events that occurred around the same time period, it was difficult to determine the impact of individual events on Sanders’ polling performance. Polling following Biden’s announcement of his bid for presidency as well as news of Sanders becoming a millionaire showed his largest decline in polling percent. Polling after his heart attack and endorsements by Ilhan Omar, Alexandra Ocasio-Cortez, and Rashida Tlaib showed modest gains. A limited number of data points for polling means we cannot see the immediate effects of each event. Polls only occurred once to twice a month, meaning these events cannot be directly linked to polling.</p></li>
-</ul>
-</div>
-<div id="the-fourth-debate" class="section level4">
-<h4><em>The Fourth Debate</em></h4>
-<p>When looking at candidate polling before and after the fourth debate, we see that Pete Buttigieg, Andrew Yang and Julian Castro’s numbers were unchanged. Compared to polls directly before this debate, Joe Biden, Corey Booker, Kamala Harris, Tulsi Gabbard, Amy Klobuchar and Bernie Sanders moved up in those polls following the debate, while Elizabeth Warren was the only candidate to move down. Biden and Warren had the largest percent change in polling numbers (Biden = 28%, Warren = -21%).</p>
-<p>We did not observe meaningful trends in polling performance before and after the debates based on words spoken, airtime, Trump mentions, or candidate attacks. However, a few points of interest are worth noting:</p>
-<ul>
-<li><p>Elizabeth Warren, who was the only candidate to move down in the polls, spoke the greatest number of words, had the longest amount of airtime, and was attacked by other candidates far more than anyone else during the debate.</p></li>
-<li><p>Both Elizabeth Warren and Joe Biden, the two candidates with the greatest number of words spoken and longest amount of airtime, had the greatest percent change in polling numbers comparing pre- and post-debate polls.</p></li>
-<li><p>Andrew Yang, Pete Buttigieg, and Julian Castro were the only candidates who did not mention Trump during the debate and were also the only candidates that did not move in the polls following the debate.</p></li>
-</ul>
-<p>The lack of observable trends is not unusual, as <a href="https://www.niskanencenter.org/how-presidential-debates-influence-voters/">experts have suggested</a> that less quantifiable factors such as charisma and “likeability” may play a large role in changing voting behavior following debates. Our analysis indicates that the variables we’ve explored can have varying effects on polling performance; further research with a larger sample size is needed to better characterize these relationships.</p>
-</div>
-<div id="google-trends" class="section level4">
-<h4><em>Google Trends</em></h4>
-<p>There appear to be sharp, meaningful increases in relative search volume the day following all debates that taper off relatively quickly. Search volume for Kamala Harris surpassed that for Joe Biden following the first debate busing controversy, perhaps because Kamala, a lesser-known candidate, was able to draw significant negative attention to Biden, an extremely well-known candidate. This change was sustained in the days following the debate. Search volume for “harris biden” is also higher than for “biden harris”, and it is reported by Seth Stephens-Davidowitz in his book “Everybody Lies” that voters tend to subconsciously place the name of the candidate they support first in searches such as this. This change in search volume is an indication that the busing comments increased support for Kamala Harris and hurt Joe Biden’s popularity among voters.</p>
-<p>Other notable debate moments are associated with Google Search behavior for individual candidates. Relative search volume spiked for Bernie following the second debate and his comment that he “wrote the damn bill,” but the change was not sustained. Beto’s resounding support of gun control measures seems to have increased voter interest in him. The increase in searches including his name remained elevated even after an initial spike, and a small spike is noted for the phrase “hell yes” which he used. Interestingly, searches for gun control also increased following the debate. Searches for Andrew Yang and his Universal Basic Income proposal sharply increased following the debate, but it is unclear if interested remained a bit elevated following this initial rise. Again, search interest in Kamala Harris rose sharply immediately after the debate, and an increase in searches that included both her name and “abortion” indicates that this interest may have been due in part to her impassioned comments on women’s reproductive rights. However, search volume for “kamala harris” fell much faster than it did for “andrew yang”, indicated that his debate performance may have caused a longer-felt impact on voters. To further explore this, I compared Harris and Yang’s search volume over the entire period included in this Google Trends analysis. Kamala Harris clearly put herself on the map during the first debate, likely with her comments regarding busing, and her search volume swamps that of Yang. However, their performance became more comparable after the second debate, and Yang has steadily received slightly higher search volume since that point. It is also interesting that search volume appears less and less impacted after each debate. This could be explained by lower viewership in the later debates, or less voter interest in these candidates over time.</p>
-</div>
-<div id="battleground-states" class="section level4">
-<h4><em>Battleground States</em></h4>
-<p>In Iowa and Pennsylvania, polling results among top candidates Biden, Warren, Sanders, and Buttigieg were fairly consistent. From 33 polls among Iowa voters, Biden leads the field, followed by Warren, Sanders, and finally Buttigieg. Warren and Sanders are close with just a 2 percentage point separation while Buttigieg sits at least 5 points behind. However, Buttigieg recently rose into the double digits at 13% in an <a href="https://www.usatoday.com/story/news/politics/elections/2019/10/21/iowa-caucuses-pete-buttigieg-elizabeth-warren-joe-biden-top-poll/4025797002/">October poll from Suffolk University/USA Today</a> among potential Iowa caucus goers, which pushed him past Sanders. That poll was not included in this sample, but is considered to be a sign of Iowans’ favor towards Buttigieg in the coming caucus. He would still need to see a substantial increase in support to close the 12 point gap between himself and Biden though. In Pennsylvania, Biden still appears to be the frontrunner with a median 30 percentage points, while the gaps between Warren, Sanders, and Buttigieg have closed, as they are all within 3.2 percentage points of each other. Data for Pennsylvania was only available from 7 polls, which meant there was a lower sample size and overall variability in data points to construct accurate estimates of polling performance, particularly for Biden and Buttigieg.</p>
-<p>Candidacy announcements and debates were associated with the greatest increases in relative search volume. Both Sanders and Biden experienced large spikes in search volume in the spring in both states at the time of their announcements. With the exception of these spikes, queries for Biden, Warren, and Sanders largely mirror one another throughout the year and increase together during debates. In Iowa, relative search volume trended upward through to the fall, while in Pennsylvania volume remained quite level outside of occasional spikes. Higher relative search volumes during debates suggest voter interest in performance, although there isn’t a clear candidate preference moving forward in either Iowa of Pennsylvania. Buttigieg exhibited the lowest overall results in relative search queries, and changes in search behavior due to factors such as debate performances are masked by the significantly greater search volume associated with the other three candidates.</p>
-</div>
+<p>Data The bus delay data in New York were obtained from NYC Open Data. The data set contains huge amount of data (more than 500,000 observations). Due to the time limit and computer processing power, data from January 1, 2018 to September 30, 2021 were selected. These data contained information about where delay happened, delay time, school name and so on.</p>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 
@@ -479,35 +343,6 @@ $(document).ready(function () {
 });
 </script>
 
-<script>
-$(document).ready(function ()  {
-
-    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
-    $('.unlisted.unnumbered').addClass('toc-ignore')
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
