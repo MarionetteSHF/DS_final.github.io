@@ -1,6 +1,6 @@
 ---
 title: "data analysis_Hypothesis Test"
-author: "Paulina Han"
+author: "Paulina Han & Huili Zheng"
 date: "2021/12/7"
 output: html_document
 ---
