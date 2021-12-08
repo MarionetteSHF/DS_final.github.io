@@ -371,29 +371,101 @@ div.tocify {
 <h2>Predicting Model for Daily Delay Account</h2>
 <p>From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, reasons,daily precipitation,run type of bus, daily snow depth as predictors.</p>
 <p>Our interested dependent variable is number of delay across three school years: the amount of delay in Manhattan. We can interpret that this dependent is following poison distribution, so we need to consider regression model for this settings. Based on the graph below, the daily delay across three consecutive school have declined.</p>
-<pre class="r"><code>df %&gt;% 
+<pre class="r"><code>daily_df = df %&gt;% 
   filter(school_year!=&quot;2021-2022&quot;,
          boro ==&quot;Manhattan&quot;) %&gt;% 
-  group_by(school_year) %&gt;% 
-  summarize(n=n()) %&gt;% 
-  mutate(daily=case_when(school_year==&quot;2020-2021&quot;~ n/225,
-         school_year!=&quot;2020-2021&quot;~ n/250)) %&gt;% 
-  ggplot(aes(x=school_year, y=daily,fill=school_year))+
-  geom_bar(stat=&#39;identity&#39;)+
-  labs(
-    title = &quot;Number of daily delay&quot;,
-    x = &quot;School Years&quot;,
-    y = &quot;Count&quot;
-  )</code></pre>
-<p><img src="regression_files/figure-html/unnamed-chunk-1-1.png" width="768" /> And here’s the predictors in our model:</p>
-<p>·month: month of the incident occurred; ·day: weekday of the incident occurred; ·reason : reason for delay as entered by staff employed by reporting bus vendor; ·prcp:precipitation (tenths of mm) ·run_type:designates whether a breakdown or delay occurred on a specific category of busing service; ·snwd: snow depth (mm)</p>
+   group_by(occur_date,school_year) %&gt;% 
+   summarize(n=n()) %&gt;% 
+    ggplot(aes(x=occur_date, y=n,fill=school_year))+
+    geom_bar(stat=&#39;identity&#39;)+
+    facet_grid(~school_year)+
+      labs(
+        title = &quot;Number of Daily Delay&quot;,
+        x = &quot;Date of Delay&quot;,
+        y = &quot;Count&quot;
+      )
+daily_df</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-1-1.png" width="768" /></p>
+<p>Here’s the predictors in our model:</p>
+<p> ·<strong>month</strong>: month of the incident occurred;</p>
+<p> ·<strong>day</strong>: weekday of the incident occurred;</p>
+<p> ·<strong>reason</strong> : reason for delay as entered by staff employed by reporting bus vendor;</p>
+<p> ·<strong>prcp</strong>:precipitation (tenths of mm)</p>
+<p> ·<strong>run_type</strong>:designates whether a breakdown or delay occurred on a specific category of busing service;</p>
+<p> ·<strong>snwd</strong>: snow depth (mm)</p>
 </div>
 <div id="fitting-model" class="section level2">
 <h2>Fitting Model</h2>
 <p>We propose 3 models for prediction:</p>
+<p> 1. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
+<p> 2. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd + weekday* reason,assuming that there are interaction</p>
+<p> 3. Step_wise Regression Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
+<pre class="r"><code>cv_df=df %&gt;% 
+  sample_n(size = 100) %&gt;% 
+  group_by(occur_date) %&gt;% 
+  mutate(daily_delay=n()) %&gt;% 
+  modelr::crossv_mc(n = 100) %&gt;%
+  mutate(train = map(train, as.tibble), 
+         test = map(test, as.tibble)) %&gt;% 
+  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,family = poisson(),data = .x)),
+    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,family = poisson(),data = .x))) %&gt;% 
+  select(-train)</code></pre>
+<pre class="r"><code>cv=cv_df %&gt;% 
+  select(starts_with(&quot;lm&quot;)) %&gt;% 
+  pivot_longer(
+    starts_with(&quot;lm&quot;),
+    names_to = &quot;model&quot;,
+    values_to = &quot;data&quot;) %&gt;% 
+  mutate(data = map(data,broom::tidy))
+
+cv %&gt;%
+  filter(model == &quot;lm_1&quot;) %&gt;%
+  unnest(data) </code></pre>
+<pre><code>## # A tibble: 2,166 × 6
+##    model term           estimate std.error statistic    p.value
+##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1 lm_1  (Intercept)      1.40       0.265     5.26  0.00000214
+##  2 lm_1  monthFebruary    0.176      0.338     0.521 0.604     
+##  3 lm_1  monthMarch       0.373      0.276     1.35  0.182     
+##  4 lm_1  monthApril       0.603      0.325     1.86  0.0682    
+##  5 lm_1  monthMay         0.0544     0.367     0.148 0.883     
+##  6 lm_1  monthJune       -0.220      0.348    -0.632 0.530     
+##  7 lm_1  monthSeptember  -0.196      0.376    -0.522 0.604     
+##  8 lm_1  monthOctober    -0.232      0.281    -0.825 0.413     
+##  9 lm_1  monthNovember   -0.0381     0.307    -0.124 0.902     
+## 10 lm_1  monthDecember    0.453      0.302     1.50  0.139     
+## # … with 2,156 more rows</code></pre>
+<pre class="r"><code>cv %&gt;%
+  filter(model == &quot;lm_2&quot;) %&gt;%
+  unnest(data) </code></pre>
+<pre><code>## # A tibble: 3,342 × 6
+##    model term           estimate std.error statistic    p.value
+##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+##  1 lm_2  (Intercept)      1.38       0.254     5.44  0.00000117
+##  2 lm_2  monthFebruary    0.225      0.325     0.692 0.492     
+##  3 lm_2  monthMarch       0.343      0.265     1.29  0.201     
+##  4 lm_2  monthApril       0.564      0.312     1.81  0.0757    
+##  5 lm_2  monthMay         0.0666     0.352     0.189 0.851     
+##  6 lm_2  monthJune       -0.246      0.334    -0.737 0.464     
+##  7 lm_2  monthSeptember  -0.185      0.361    -0.512 0.610     
+##  8 lm_2  monthOctober    -0.228      0.270    -0.846 0.401     
+##  9 lm_2  monthNovember   -0.0565     0.295    -0.191 0.849     
+## 10 lm_2  monthDecember    0.596      0.295     2.02  0.0485    
+## # … with 3,332 more rows</code></pre>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
+<pre class="r"><code>cv_df %&gt;% 
+  mutate(rmse_1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
+    rmse_2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %&gt;% 
+  select(starts_with(&quot;rmse&quot;)) %&gt;% 
+  pivot_longer(
+    everything(),
+    names_to = &quot;model&quot;, 
+    values_to = &quot;rmse&quot;,
+    names_prefix = &quot;rmse_&quot;) %&gt;% 
+  mutate(model = fct_inorder(model)) %&gt;% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
 </div>
 <div id="model-conclusion" class="section level2">
 <h2>Model Conclusion</h2>
