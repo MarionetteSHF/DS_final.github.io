@@ -1,0 +1,95 @@
+---
+title: "Regression Analysis"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    always_allow_html: true
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(modelr)
+library(mgcv)
+library(ggplot2)
+library(viridis)
+knitr::opts_chunk$set(
+  fig.height = 6,
+  fig.width = 8,
+  message = F,
+  echo = T,
+  warning = F,
+  cache = F
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis",
+  digits = 3
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+```
+
+##  Predicting Model for Daily Delay Account
+
+From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, reasons,daily precipitation,run type of bus, daily snow depth as predictors.
+
+```{r load_data,include=FALSE,message=FALSE,warning = FALSE}
+df = read_csv("data/clean_data.csv") 
+df %>%
+  mutate(
+    month = factor(month, levels = c("January","February","March","April","May","June","September","October","November","December")),
+    day = factor(day, levels = c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>% 
+  select(boro,month,day,reason,prcp,snwd,run_type,school_year) %>% 
+  na.omit()
+  
+```
+
+Our interested dependent variable is number of delay across three school years: the amount of delay in Manhattan. We can interpret that this dependent is following poison distribution, so we need to consider regression model for this settings. Based on the graph below, the daily delay across three consecutive school have declined.
+
+```{r}
+df %>% 
+  filter(school_year!="2021-2022",
+         boro =="Manhattan") %>% 
+  group_by(school_year) %>% 
+  summarize(n=n()) %>% 
+  mutate(daily=case_when(school_year=="2020-2021"~ n/225,
+         school_year!="2020-2021"~ n/250)) %>% 
+  ggplot(aes(x=school_year, y=daily,fill=school_year))+
+  geom_bar(stat='identity')+
+  labs(
+    title = "Number of Daily Delay",
+    x = "School Years",
+    y = "Count"
+  )
+```
+And here’s the predictors in our model:
+
+·month: month of the incident occurred;
+·day: weekday of the incident occurred;
+·reason : reason for delay as entered by staff employed by reporting bus vendor;
+·prcp:precipitation (tenths of mm)
+·run_type:designates whether a breakdown or delay occurred on a specific category of busing service;
+·snwd: snow depth (mm)
+
+## Fitting Model
+We propose 3 models for prediction:
+
+## Cross Validation 
+
+## Model Conclusion
+
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+
+```
+
+
+
+
+
