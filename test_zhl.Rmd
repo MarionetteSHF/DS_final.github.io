@@ -1,0 +1,119 @@
+---
+title: "Hypothesis test"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    always_allow_html: true
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+
+knitr::opts_chunk$set(
+  fig.height = 6,
+  fig.width = 8,
+  message = F,
+  echo = T,
+  warning = F,
+  cache = F
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis",
+  digits = 3
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+
+```
+
+
+
+```{r load_data,echo = FALSE, message=FALSE,warning = FALSE}
+df = read_csv("data/clean_data.csv") 
+month_df =
+  df %>%
+  filter(school_year == "2018-2019") %>%
+  mutate(
+    month = factor(month, levels = c("January","February","March","April","May","June","September","October","November","December"))
+  ) 
+```
+
+## Hypothesis test about monthly delay counts
+
+### Chi-squared test between monthly delay counts and different months
+
+From data exploration, we have notice that the delay counts varies among 
+months. We see from the table that the number of delays in January is different from that in June by over 3000, and thus, we propose hypothesis that there is no homogeneity in delay counts in each months.
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+month_df =
+  month_df %>% 
+  select(month, how_long_delayed) %>%
+  group_by(month) %>% 
+  summarize(frequency = n()) 
+
+month_df %>% 
+  knitr::kable(caption = "Delay counts in months")
+```
+
+We use Chi-squared test for multiple groups comparison. 
+
+$H_0$ : there's no difference of delay counts between months.
+
+$H_1$ : at least two delays counts of months are not equal.
+
+```{r}
+month_df =
+  month_df %>% 
+  data.matrix()
+
+chisq.test(month_df)
+```
+
+According to above chi-square test result and the x critical value ( = `r qchisq(0.95,9)`). We reject the null hypothesis and conclude that there's at least one month's delay counts is different from others at 0.05 significant level.
+
+## Hypothesis test about daily delay counts
+
+### Chi-squared test between daily delay counts and different weekdays
+
+We know that month matters the number of delays at 0.05 significant level. But what about different weekdays? I remembered that I was always late for school on Monday. Is it my personal problem? Maybe because of more school bus delays on Monday? To find out the real reason,we use Chi-squared test to see whether there is  homogeneity in delay counts for each weekday.
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+weekday_df =  
+  df %>% 
+  select(day, how_long_delayed) %>%
+  mutate(day = factor(day, levels = c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>%
+  group_by(day) %>% 
+  summarize(frequency = n()) 
+
+weekday_df %>% 
+  knitr::kable(caption = "Daily delay counts")
+```
+
+We use Chi-squared test for multiple groups comparison. 
+
+$H_0$ : there's no difference of delay counts for each weekdays.
+
+$H_1$ : at least two delays counts of weekdays are not equal.
+
+```{r}
+weekday_df =
+  weekday_df %>% 
+  data.matrix()
+
+chisq.test(weekday_df)
+```
+
+According to above chi-square test result and the x critical value ( = `r qchisq(0.95,4)`). We fail to reject the null hypothesis and conclude that there's no statistically difference among weekdays at 0.05 significant level. Unfortunately, there is homogeneity in the delay counts for each weekday. It seems that the reason I was always late on Monday was I still missed my weekend.
+
+
+School bus delays occur less frequently in spring and summer, and more frequently in winter, except in December, which may be due to the longer holidays in December. Snow in winter leads to complex road conditions, prone to accidents, and a higher probability of delays.
+
+
+
