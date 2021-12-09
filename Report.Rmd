@@ -24,8 +24,16 @@ The bus delay data in New York were obtained from NYC Open Data. The data set co
 
 
 
+# Data Explortary
 
+To have some statistical understanding of our data, we decided to take a step further before moving on to modeling.
 
+While looking at the reason of school bus delays, we see that heavy traffic is the main reason and all other reasons plays a minor part. This lead us to ask the question, whether the distribution of school bus delay reasons is the same across 2018-2021 school years.Though we include data in 2021-2022 Fall, yet the counts isn't comparable with other school years. So we only look at the 3 school years including, 2018-2019, 2019-2020, 2020-2021.To answer our question, we conducted a chi-square test. From the test result,we conclude that the reasons of delay have a different distribution across the school years though they seem about the same in our bar plots. Our guess is that although the leading reason remains to be heavy traffic, the percentage of heavy traffic being the reason is actually decreasing over the years.Given that the distribution of delay reasons varies from year to year, we decide to look at the nearest pre-pandemic school year. The reason we focus on 2019-2020 school year is that we assume the post pandemic situation should be similar with the nearest pre pandemic situation. 
 
+Looking at the plot in the distribution of delay reasons,we believe that the frequency of different reasons should not be the same. And now we want to verify our assumption using a chi-square test.From the result, we have enough evidence to say that the frequency of delay reasons are not equally distributed in 2019-2020 school year.
+
+we also noticed that the delay counts varies among each month. We can see from the yearly distribution plot of school bus delays we see that winter time tend to have more delays, thus, we propose hypothesis that there is no homogeneity in delay counts in each months. According to the chi-square test result we conclude that there's no difference of delay counts between months. The counter-intuitive result may be caused by the lock down during April to May of 2020.We don't have any information on these 2 month therefore we are only testing the "winter month".
+
+We know there's no difference of delay counts between months in 2019-2020. But what about different weekdays? I remembered that I was always late for school on Monday. Is it my personal problem? Maybe because of more school bus delays on Monday? To find out the real reason,we use Chi-squared test to see whether there is  homogeneity in delay counts for each weekday. According to the chi-square test result we conclude that there's no statistically difference among weekdays at 0.05 significant level. Unfortunately, there is homogeneity in the delay counts for each weekday. It seems that the reason I was always late on Monday was I still missed my weekend.
 
 
