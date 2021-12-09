@@ -1,9 +1,10 @@
 ---
-title: "Trend of School Bus Delay Over Time"
-date: 
+title: "Trend of School Bus Delay"
 output: 
   html_document:
     code_folding: hide
+    toc: true
+    toc_float: true
     always_allow_html: true
     css: style.css
 ---
