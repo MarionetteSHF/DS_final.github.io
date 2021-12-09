@@ -175,7 +175,7 @@ cv_df %>%
 
 ## Model Conclusion
 
-Month,rainfall,snow depth, andday are good predictors for anticipating the number of daily delay in Manhattan.
+Month,rainfall,snow depth, and day are good predictors for anticipating the number of daily delay in Manhattan.
 
 
 
