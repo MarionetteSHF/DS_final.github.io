@@ -161,7 +161,7 @@ ggplotly(plot_6)
 
 ## Examine the Association between Reasons of Bus Delay and Snow Depth across the School Year
 
-It is interesting to see there is an inverse relationship between snow depth and number of cases of heavy traffic in 2018-2019 school year. However, it seems that there is no association between snow depth and heavy traffic in 2020-2021.
+It is interesting to see there is an inverse relationship between snow depth and number of cases of heavy traffic in 2018-2019 school year. However, it seems that there is no association between snow depth and heavy traffic in 2020-2021.We are unable to analyze the heavy traffic and snow depth in 2019-2020 because there are not many snowy days.
 
 ```{r,message=FALSE}
 plot_6=plot_df %>% 
@@ -180,9 +180,9 @@ plot_6=plot_df %>%
 ```
 
 
-## Examine the Association between Heavy Traffic across the Weekday
+## Examine the Association between Heavy Traffic across the Weekdays
 \ Based on the graph below, we can see the heavy traffic is more frequently happen on Thursday across three school years.
-It is less likely to occur on Monday in 2018-2019 and 2019-2020. Due to the interruption of COVID-19, people spend more time at home or for quarantine. Therefore,it may be the reason why hte number of heavy traffic has sufficiently declining。
+It is less likely to occur on Monday in 2018-2019 and 2019-2020. Due to the interruption of COVID-19, people spend more time at home or for quarantine. Therefore,it may be the reason why the number of heavy traffic has sufficiently declining. It also can explain why the number of delays is equally distributed across the weekdays.
 
 ```{r,message=FALSE}
 plot_df %>% 
