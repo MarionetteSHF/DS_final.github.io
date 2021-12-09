@@ -407,9 +407,8 @@ daily_df</code></pre>
   modelr::crossv_mc(n = 100) %&gt;%
   mutate(train = map(train, as.tibble), 
          test = map(test, as.tibble)) %&gt;% 
-  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,family = poisson(),data = .x)),
-    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,family = poisson(),data = .x))) %&gt;% 
-  select(-train)</code></pre>
+  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,data = .x)),
+    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,data = .x))) </code></pre>
 <pre class="r"><code>cv=cv_df %&gt;% 
   select(starts_with(&quot;lm&quot;)) %&gt;% 
   pivot_longer(
@@ -452,12 +451,58 @@ cv %&gt;%
 ##  9 lm_2  monthNovember   -0.0565     0.295    -0.191 0.849     
 ## 10 lm_2  monthDecember    0.596      0.295     2.02  0.0485    
 ## # … with 3,332 more rows</code></pre>
+<pre class="r"><code>df_1=df %&gt;% 
+  group_by(occur_date) %&gt;% 
+  mutate(daily_delay=n()) %&gt;% 
+  ungroup(occur_date) %&gt;% 
+  select(everything())
+multi.fit=lm(daily_delay~month + day + reason + prcp + run_type + snwd, data=df_1)
+step(multi.fit, direction=&#39;forward&#39;)</code></pre>
+<pre><code>## Start:  AIC=501067
+## daily_delay ~ month + day + reason + prcp + run_type + snwd</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = daily_delay ~ month + day + reason + prcp + run_type + 
+##     snwd, data = df_1)
+## 
+## Coefficients:
+##                       (Intercept)                      monthFebruary  
+##                          204.8999                             4.9389  
+##                        monthMarch                         monthApril  
+##                          -15.7781                           -87.2424  
+##                          monthMay                          monthJune  
+##                          -68.0703                           -95.0347  
+##                    monthSeptember                       monthOctober  
+##                          -17.9412                             7.1682  
+##                     monthNovember                      monthDecember  
+##                           13.1501                             8.1910  
+##                        dayTuesday                       dayWednesday  
+##                           -4.3651                            -7.2219  
+##                       dayThursday                          dayFriday  
+##                           -9.5545                           -11.8477  
+##          reasonMechanical Problem                    reasonFlat Tire  
+##                          -14.0992                            -6.9486  
+##                       reasonOther                  reasonProblem Run  
+##                          -11.3188                            -5.4150  
+##                    reasonAccident  reasonLate return from Field Trip  
+##                          -17.2673                             6.1906  
+##          reasonWeather Conditions                               prcp  
+##                           16.1362                             0.0549  
+##         run_typeGeneral Ed AM Run          run_typeSpecial Ed PM Run  
+##                           -7.6709                             2.0439  
+##         run_typeGeneral Ed PM Run      run_typeSpecial Ed Field Trip  
+##                          -13.4347                            14.8374  
+##     run_typeGeneral Ed Field Trip        run_typeProject Read PM Run  
+##                           13.3863                            15.8668  
+##                              snwd  
+##                           -0.4192</code></pre>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
 <pre class="r"><code>cv_df %&gt;% 
-  mutate(rmse_1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
-    rmse_2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %&gt;% 
+  mutate(
+    rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
+    rmse_lm2    = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
   pivot_longer(
     everything(),
