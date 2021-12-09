@@ -78,11 +78,7 @@ Here’s the predictors in our model:
 
 \ ·**day**: weekday of the incident occurred;
 
-\ ·**reason** : reason for delay as entered by staff employed by reporting bus vendor;
-
 \ ·**prcp**:precipitation (tenths of mm)
-
-\ ·**run_type**:designates whether a breakdown or delay occurred on a specific category of busing service;
 
 \ ·**snwd**: snow depth (mm)
 
@@ -102,6 +98,20 @@ We propose 4 models for prediction:
   
 \ 4. Step_wise Regression Model of daily_delay ~ month + day + prcp + snwd+ tmin
 
+
+
+```{r}
+daily_delay=df %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) 
+  
+lm_1=lm(daily_delay ~ month + day  + snwd + tmin,data=daily_delay)
+lm_2=lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data=daily_delay)
+lm_3=lm(daily_delay ~ month + day+ prcp,data=daily_delay)
+lm_1 %>% broom::tidy() %>% knitr::kable(digits = 2)
+lm_2%>% broom::tidy() %>% knitr::kable(digits = 2)
+lm_3%>% broom::tidy() %>% knitr::kable(digits = 2)
+```
 
 
 
@@ -129,23 +139,6 @@ cv=cv_df %>%
     names_to = "model",
     values_to = "data") %>% 
   mutate(data = map(data,broom::tidy))
-
-cv %>%
-  filter(model == "lm_1") %>%
-  unnest(data) 
-```
-
-```{r}
-cv %>%
-  filter(model == "lm_2") %>%
-  unnest(data) 
-
-```
-
-```{r}
-cv %>%
-  filter(model == "lm_3") %>%
-  unnest(data) 
 ```
 
 
