@@ -38,7 +38,7 @@ set.seed(1)
 
 ##  Predicting Model for Daily Delay Account
 
-From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, reasons,daily precipitation,run type of bus, daily snow depth as predictors.
+From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, daily precipitation,daily snow depth,and minimum temperature as predictors.
 
 ```{r load_data,include=FALSE, message=FALSE,warning = FALSE}
 df = read_csv("data/clean_data.csv") %>% 
@@ -88,7 +88,7 @@ Here’s the predictors in our model:
 
 ## Fitting Model
 
-We propose 4 models for prediction:
+We propose 3 models for prediction:
 
 \ 1. Linear Model of daily_delay ~ month + day + snwd + tmin
 
@@ -96,23 +96,35 @@ We propose 4 models for prediction:
 
 \ 3. Linear Model of daily_delay ~ month + day  + prcp
   
-\ 4. Step_wise Regression Model of daily_delay ~ month + day + prcp + snwd+ tmin
 
 
-
+**Model_1**
 ```{r}
 daily_delay=df %>% 
   group_by(occur_date) %>% 
   mutate(daily_delay=n()) 
   
 lm_1=lm(daily_delay ~ month + day  + snwd + tmin,data=daily_delay)
-lm_2=lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data=daily_delay)
-lm_3=lm(daily_delay ~ month + day+ prcp,data=daily_delay)
 lm_1 %>% broom::tidy() %>% knitr::kable(digits = 2)
-lm_2%>% broom::tidy() %>% knitr::kable(digits = 2)
-lm_3%>% broom::tidy() %>% knitr::kable(digits = 2)
 ```
 
+**Model_2**
+```{r}
+daily_delay=df %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) 
+lm_2=lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data=daily_delay)
+lm_2%>% broom::tidy() %>% knitr::kable(digits = 2)
+```
+
+**Model_3**
+```{r}
+daily_delay=df %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) 
+lm_3=lm(daily_delay ~ month + day+ prcp,data=daily_delay)
+lm_3%>% broom::tidy() %>% knitr::kable(digits = 2)
+```
 
 
 
@@ -142,21 +154,8 @@ cv=cv_df %>%
 ```
 
 
-```{r}
-df_1=df %>% 
-  group_by(occur_date) %>% 
-  mutate(daily_delay=n()) %>% 
-  ungroup(occur_date) %>% 
-  select(everything())
-
-multi.fit=lm(daily_delay~month + day + prcp  + snwd+ tmin, data=df_1)
-
-summary(multi.fit)
-step(multi.fit, direction='both')
-```
-
 ## Cross Validation 
-Predictors we chose above are statistically significant.However,we notice that interaction terms are not contributing to model predictability.We would say lm_1 and lm_3 might be a bit better than lm-2.
+Predictors we chose above are statistically significant.However,we notice that interaction terms are not contributing to model predictability.We would say lm_3 will be better than other two models because its root mean square error seems to be smaller. Therefore, lm_3 could be useful for predicting the total number of bus delay in Manhattan.
 ```{r,message=FALSE}
 cv_df %>% 
   mutate(
@@ -172,12 +171,11 @@ cv_df %>%
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()
 
-
 ```
 
 ## Model Conclusion
 
-Month,rainfall,snow depth, and day are good predictors for anticipating the number of daily delay in Manhattan.
+Month,rainfall,snow depth, andday are good predictors for anticipating the number of daily delay in Manhattan.
 
 
 
