@@ -23,6 +23,7 @@ Data
 The bus delay data in New York were obtained from NYC Open Data. The data set contains huge amount of data (more than 500,000 observations). Due to the time limit and computer processing power, data from January 1, 2018 to September 30, 2021 were selected. These data contained information about where delay happened, delay time, school name and so on.
 
 
+#Data Analysis
 
 # Data Explortary
 
