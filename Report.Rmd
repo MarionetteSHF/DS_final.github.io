@@ -46,3 +46,8 @@ Furthermore, we want to examine the possible relationship between heavy traffic 
 
 Finally, we examine the relationship between weekdays and heavy traffic. We calculate the average delay due to heavy traffic per weekday across three years. We observe that heavy traffic happens frequently on Thursday and less frequently on Monday. In the school year 2020-2021, it is almost equally likely to have a similar number of delays on school days. 
 
+
+# Mapping Part
+
+We considered the geolocation of schools in New York city from 2015 to 2019. Compared with other areas, schools in Manhattan have more delays in school buses, and the time of delays are longer. Therefore our project is mainly for schools in Manhattan. Data in these geolocation and density heatmap plots helped identify certain neighborhoods in Manhattan that appear to have more and longer delays  and they include East Harlem and Lower East Side, as well as the Hudson Yards.
+

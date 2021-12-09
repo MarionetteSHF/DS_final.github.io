@@ -336,6 +336,21 @@ div.tocify {
 <li>
   <a href="Reasons-for-bus-delay.html">reason-part</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="test_zhl.html">Test</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="Report.html">Report</a>
 </li>
@@ -389,120 +404,518 @@ daily_df</code></pre>
 <p>Here’s the predictors in our model:</p>
 <p> ·<strong>month</strong>: month of the incident occurred;</p>
 <p> ·<strong>day</strong>: weekday of the incident occurred;</p>
-<p> ·<strong>reason</strong> : reason for delay as entered by staff employed by reporting bus vendor;</p>
 <p> ·<strong>prcp</strong>:precipitation (tenths of mm)</p>
-<p> ·<strong>run_type</strong>:designates whether a breakdown or delay occurred on a specific category of busing service;</p>
 <p> ·<strong>snwd</strong>: snow depth (mm)</p>
+<p> ·<strong>tmin</strong> Minimum temperature (tenths of degrees C)</p>
 </div>
 <div id="fitting-model" class="section level2">
 <h2>Fitting Model</h2>
-<p>We propose 3 models for prediction:</p>
-<p> 1. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
-<p> 2. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd + weekday* reason,assuming that there are interaction</p>
-<p> 3. Step_wise Regression Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
+<p>We propose 4 models for prediction:</p>
+<p> 1. Linear Model of daily_delay ~ month + day + snwd + tmin</p>
+<p> 2. Linear Model of daily_delay ~ month + day + snwd + tmin+ tmin*day,assuming that there are interaction</p>
+<p> 3. Linear Model of daily_delay ~ month + day + prcp</p>
+<p> 4. Step_wise Regression Model of daily_delay ~ month + day + prcp + snwd+ tmin</p>
+<pre class="r"><code>daily_delay=df %&gt;% 
+  group_by(occur_date) %&gt;% 
+  mutate(daily_delay=n()) 
+  
+lm_1=lm(daily_delay ~ month + day  + snwd + tmin,data=daily_delay)
+lm_2=lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data=daily_delay)
+lm_3=lm(daily_delay ~ month + day+ prcp,data=daily_delay)
+lm_1 %&gt;% broom::tidy() %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">131.71</td>
+<td align="right">1.15</td>
+<td align="right">114.35</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthDecember</td>
+<td align="right">73.71</td>
+<td align="right">1.27</td>
+<td align="right">58.06</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthFebruary</td>
+<td align="right">71.29</td>
+<td align="right">1.29</td>
+<td align="right">55.31</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthJanuary</td>
+<td align="right">56.93</td>
+<td align="right">1.28</td>
+<td align="right">44.57</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthJune</td>
+<td align="right">30.11</td>
+<td align="right">1.54</td>
+<td align="right">19.58</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthMarch</td>
+<td align="right">53.46</td>
+<td align="right">1.25</td>
+<td align="right">42.80</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthMay</td>
+<td align="right">38.77</td>
+<td align="right">1.31</td>
+<td align="right">29.65</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthNovember</td>
+<td align="right">94.69</td>
+<td align="right">1.18</td>
+<td align="right">80.57</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthOctober</td>
+<td align="right">110.83</td>
+<td align="right">1.16</td>
+<td align="right">95.51</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthSeptember</td>
+<td align="right">106.81</td>
+<td align="right">1.33</td>
+<td align="right">80.12</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayMonday</td>
+<td align="right">14.99</td>
+<td align="right">0.76</td>
+<td align="right">19.69</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayThursday</td>
+<td align="right">2.90</td>
+<td align="right">0.75</td>
+<td align="right">3.89</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayTuesday</td>
+<td align="right">9.36</td>
+<td align="right">0.75</td>
+<td align="right">12.47</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayWednesday</td>
+<td align="right">4.08</td>
+<td align="right">0.74</td>
+<td align="right">5.48</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">snwd</td>
+<td align="right">-0.51</td>
+<td align="right">0.01</td>
+<td align="right">-44.45</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">tmin</td>
+<td align="right">-3.51</td>
+<td align="right">0.06</td>
+<td align="right">-61.90</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>lm_2%&gt;% broom::tidy() %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">125.22</td>
+<td align="right">1.21</td>
+<td align="right">103.61</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthDecember</td>
+<td align="right">72.58</td>
+<td align="right">1.26</td>
+<td align="right">57.44</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthFebruary</td>
+<td align="right">71.68</td>
+<td align="right">1.28</td>
+<td align="right">55.87</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthJanuary</td>
+<td align="right">56.12</td>
+<td align="right">1.27</td>
+<td align="right">44.14</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthJune</td>
+<td align="right">30.30</td>
+<td align="right">1.54</td>
+<td align="right">19.73</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthMarch</td>
+<td align="right">52.43</td>
+<td align="right">1.24</td>
+<td align="right">42.18</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthMay</td>
+<td align="right">38.03</td>
+<td align="right">1.30</td>
+<td align="right">29.22</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthNovember</td>
+<td align="right">94.20</td>
+<td align="right">1.17</td>
+<td align="right">80.56</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthOctober</td>
+<td align="right">111.27</td>
+<td align="right">1.15</td>
+<td align="right">96.36</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthSeptember</td>
+<td align="right">106.22</td>
+<td align="right">1.33</td>
+<td align="right">79.94</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayMonday</td>
+<td align="right">24.35</td>
+<td align="right">1.02</td>
+<td align="right">23.87</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayThursday</td>
+<td align="right">6.81</td>
+<td align="right">0.95</td>
+<td align="right">7.18</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayTuesday</td>
+<td align="right">24.06</td>
+<td align="right">0.96</td>
+<td align="right">25.01</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayWednesday</td>
+<td align="right">11.61</td>
+<td align="right">0.94</td>
+<td align="right">12.34</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">snwd</td>
+<td align="right">-0.51</td>
+<td align="right">0.01</td>
+<td align="right">-44.77</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">tmin</td>
+<td align="right">-2.45</td>
+<td align="right">0.08</td>
+<td align="right">-29.42</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayMonday:tmin</td>
+<td align="right">-1.42</td>
+<td align="right">0.10</td>
+<td align="right">-14.03</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayThursday:tmin</td>
+<td align="right">-0.58</td>
+<td align="right">0.09</td>
+<td align="right">-6.33</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayTuesday:tmin</td>
+<td align="right">-2.30</td>
+<td align="right">0.09</td>
+<td align="right">-24.26</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayWednesday:tmin</td>
+<td align="right">-1.16</td>
+<td align="right">0.09</td>
+<td align="right">-12.76</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>lm_3%&gt;% broom::tidy() %&gt;% knitr::kable(digits = 2)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">term</th>
+<th align="right">estimate</th>
+<th align="right">std.error</th>
+<th align="right">statistic</th>
+<th align="right">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">(Intercept)</td>
+<td align="right">104.95</td>
+<td align="right">1.13</td>
+<td align="right">93.02</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthDecember</td>
+<td align="right">95.89</td>
+<td align="right">1.26</td>
+<td align="right">76.40</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthFebruary</td>
+<td align="right">85.93</td>
+<td align="right">1.27</td>
+<td align="right">67.76</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthJanuary</td>
+<td align="right">90.24</td>
+<td align="right">1.21</td>
+<td align="right">74.78</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthJune</td>
+<td align="right">-8.15</td>
+<td align="right">1.47</td>
+<td align="right">-5.54</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthMarch</td>
+<td align="right">69.26</td>
+<td align="right">1.26</td>
+<td align="right">54.98</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthMay</td>
+<td align="right">19.62</td>
+<td align="right">1.32</td>
+<td align="right">14.84</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthNovember</td>
+<td align="right">101.28</td>
+<td align="right">1.21</td>
+<td align="right">83.53</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">monthOctober</td>
+<td align="right">95.53</td>
+<td align="right">1.18</td>
+<td align="right">81.12</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">monthSeptember</td>
+<td align="right">69.04</td>
+<td align="right">1.24</td>
+<td align="right">55.53</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayMonday</td>
+<td align="right">13.89</td>
+<td align="right">0.79</td>
+<td align="right">17.62</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayThursday</td>
+<td align="right">3.72</td>
+<td align="right">0.77</td>
+<td align="right">4.81</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">dayTuesday</td>
+<td align="right">8.62</td>
+<td align="right">0.78</td>
+<td align="right">11.05</td>
+<td align="right">0</td>
+</tr>
+<tr class="even">
+<td align="left">dayWednesday</td>
+<td align="right">5.19</td>
+<td align="right">0.78</td>
+<td align="right">6.70</td>
+<td align="right">0</td>
+</tr>
+<tr class="odd">
+<td align="left">prcp</td>
+<td align="right">0.06</td>
+<td align="right">0.00</td>
+<td align="right">19.14</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
 <pre class="r"><code>cv_df=df %&gt;% 
   sample_n(size = 100) %&gt;% 
   group_by(occur_date) %&gt;% 
   mutate(daily_delay=n()) %&gt;% 
   modelr::crossv_mc(n = 100) %&gt;%
+  mutate_if(is.character, as.factor) %&gt;% 
   mutate(train = map(train, as.tibble), 
          test = map(test, as.tibble)) %&gt;% 
-  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,data = .x)),
-    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,data = .x))) </code></pre>
+  mutate(lm_1 = map(.x = train,~ lm(daily_delay ~ month + day  + snwd + tmin,data = .x)),
+         lm_2 =map(.x = train,~ lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data = .x)),
+         lm_3 =map(.x = train,~ lm(daily_delay ~ month + day+ prcp, data = .x)))</code></pre>
 <pre class="r"><code>cv=cv_df %&gt;% 
   select(starts_with(&quot;lm&quot;)) %&gt;% 
   pivot_longer(
     starts_with(&quot;lm&quot;),
     names_to = &quot;model&quot;,
     values_to = &quot;data&quot;) %&gt;% 
-  mutate(data = map(data,broom::tidy))
-
-cv %&gt;%
-  filter(model == &quot;lm_1&quot;) %&gt;%
-  unnest(data) </code></pre>
-<pre><code>## # A tibble: 2,166 × 6
-##    model term           estimate std.error statistic    p.value
-##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-##  1 lm_1  (Intercept)      1.40       0.265     5.26  0.00000214
-##  2 lm_1  monthFebruary    0.176      0.338     0.521 0.604     
-##  3 lm_1  monthMarch       0.373      0.276     1.35  0.182     
-##  4 lm_1  monthApril       0.603      0.325     1.86  0.0682    
-##  5 lm_1  monthMay         0.0544     0.367     0.148 0.883     
-##  6 lm_1  monthJune       -0.220      0.348    -0.632 0.530     
-##  7 lm_1  monthSeptember  -0.196      0.376    -0.522 0.604     
-##  8 lm_1  monthOctober    -0.232      0.281    -0.825 0.413     
-##  9 lm_1  monthNovember   -0.0381     0.307    -0.124 0.902     
-## 10 lm_1  monthDecember    0.453      0.302     1.50  0.139     
-## # … with 2,156 more rows</code></pre>
-<pre class="r"><code>cv %&gt;%
-  filter(model == &quot;lm_2&quot;) %&gt;%
-  unnest(data) </code></pre>
-<pre><code>## # A tibble: 3,342 × 6
-##    model term           estimate std.error statistic    p.value
-##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-##  1 lm_2  (Intercept)      1.38       0.254     5.44  0.00000117
-##  2 lm_2  monthFebruary    0.225      0.325     0.692 0.492     
-##  3 lm_2  monthMarch       0.343      0.265     1.29  0.201     
-##  4 lm_2  monthApril       0.564      0.312     1.81  0.0757    
-##  5 lm_2  monthMay         0.0666     0.352     0.189 0.851     
-##  6 lm_2  monthJune       -0.246      0.334    -0.737 0.464     
-##  7 lm_2  monthSeptember  -0.185      0.361    -0.512 0.610     
-##  8 lm_2  monthOctober    -0.228      0.270    -0.846 0.401     
-##  9 lm_2  monthNovember   -0.0565     0.295    -0.191 0.849     
-## 10 lm_2  monthDecember    0.596      0.295     2.02  0.0485    
-## # … with 3,332 more rows</code></pre>
+  mutate(data = map(data,broom::tidy))</code></pre>
 <pre class="r"><code>df_1=df %&gt;% 
   group_by(occur_date) %&gt;% 
   mutate(daily_delay=n()) %&gt;% 
   ungroup(occur_date) %&gt;% 
   select(everything())
-multi.fit=lm(daily_delay~month + day + reason + prcp + run_type + snwd, data=df_1)
-step(multi.fit, direction=&#39;forward&#39;)</code></pre>
-<pre><code>## Start:  AIC=501067
-## daily_delay ~ month + day + reason + prcp + run_type + snwd</code></pre>
+
+multi.fit=lm(daily_delay~month + day + prcp  + snwd+ tmin, data=df_1)
+
+summary(multi.fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = daily_delay ~ month + day + reason + prcp + run_type + 
-##     snwd, data = df_1)
+## lm(formula = daily_delay ~ month + day + prcp + snwd + tmin, 
+##     data = df_1)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -233.7  -35.9   12.4   40.3  119.0 
 ## 
 ## Coefficients:
-##                       (Intercept)                      monthFebruary  
-##                          204.8999                             4.9389  
-##                        monthMarch                         monthApril  
-##                          -15.7781                           -87.2424  
-##                          monthMay                          monthJune  
-##                          -68.0703                           -95.0347  
-##                    monthSeptember                       monthOctober  
-##                          -17.9412                             7.1682  
-##                     monthNovember                      monthDecember  
-##                           13.1501                             8.1910  
-##                        dayTuesday                       dayWednesday  
-##                           -4.3651                            -7.2219  
-##                       dayThursday                          dayFriday  
-##                           -9.5545                           -11.8477  
-##          reasonMechanical Problem                    reasonFlat Tire  
-##                          -14.0992                            -6.9486  
-##                       reasonOther                  reasonProblem Run  
-##                          -11.3188                            -5.4150  
-##                    reasonAccident  reasonLate return from Field Trip  
-##                          -17.2673                             6.1906  
-##          reasonWeather Conditions                               prcp  
-##                           16.1362                             0.0549  
-##         run_typeGeneral Ed AM Run          run_typeSpecial Ed PM Run  
-##                           -7.6709                             2.0439  
-##         run_typeGeneral Ed PM Run      run_typeSpecial Ed Field Trip  
-##                          -13.4347                            14.8374  
-##     run_typeGeneral Ed Field Trip        run_typeProject Read PM Run  
-##                           13.3863                            15.8668  
-##                              snwd  
-##                           -0.4192</code></pre>
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    130.34001    1.14697  113.64  &lt; 2e-16 ***
+## monthDecember   71.37443    1.26607   56.37  &lt; 2e-16 ***
+## monthFebruary   69.92198    1.28330   54.49  &lt; 2e-16 ***
+## monthJanuary    56.46312    1.27061   44.44  &lt; 2e-16 ***
+## monthJune       30.12089    1.53009   19.69  &lt; 2e-16 ***
+## monthMarch      53.09433    1.24254   42.73  &lt; 2e-16 ***
+## monthMay        38.68639    1.30074   29.74  &lt; 2e-16 ***
+## monthNovember   92.51235    1.17221   78.92  &lt; 2e-16 ***
+## monthOctober   111.17046    1.15440   96.30  &lt; 2e-16 ***
+## monthSeptember 106.57404    1.32609   80.37  &lt; 2e-16 ***
+## dayMonday       15.53969    0.75741   20.52  &lt; 2e-16 ***
+## dayThursday      2.61401    0.74148    3.53  0.00042 ***
+## dayTuesday       8.56736    0.74749   11.46  &lt; 2e-16 ***
+## dayWednesday     5.68897    0.74309    7.66  1.9e-14 ***
+## prcp             0.07600    0.00296   25.71  &lt; 2e-16 ***
+## snwd            -0.51022    0.01150  -44.38  &lt; 2e-16 ***
+## tmin            -3.65887    0.05667  -64.56  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 58.7 on 62221 degrees of freedom
+## Multiple R-squared:  0.306,  Adjusted R-squared:  0.306 
+## F-statistic: 1.71e+03 on 16 and 62221 DF,  p-value: &lt;2e-16</code></pre>
+<pre class="r"><code>step(multi.fit, direction=&#39;both&#39;)</code></pre>
+<pre><code>## Start:  AIC=506860
+## daily_delay ~ month + day + prcp + snwd + tmin
+## 
+##         Df Sum of Sq      RSS    AIC
+## &lt;none&gt;               2.14e+08 506860
+## - day    4   1726245 2.16e+08 507352
+## - prcp   1   2274764 2.16e+08 507516
+## - snwd   1   6778341 2.21e+08 508798
+## - tmin   1  14345529 2.28e+08 510894
+## - month  9  57893188 2.72e+08 521736</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = daily_delay ~ month + day + prcp + snwd + tmin, 
+##     data = df_1)
+## 
+## Coefficients:
+##    (Intercept)   monthDecember   monthFebruary    monthJanuary       monthJune  
+##        130.340          71.374          69.922          56.463          30.121  
+##     monthMarch        monthMay   monthNovember    monthOctober  monthSeptember  
+##         53.094          38.686          92.512         111.170         106.574  
+##      dayMonday     dayThursday      dayTuesday    dayWednesday            prcp  
+##         15.540           2.614           8.567           5.689           0.076  
+##           snwd            tmin  
+##         -0.510          -3.659</code></pre>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
+<p>Predictors we chose above are statistically significant.However,we notice that interaction terms are not contributing to model predictability.We would say lm_1 and lm_3 might be a bit better than lm-2.</p>
 <pre class="r"><code>cv_df %&gt;% 
   mutate(
     rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
-    rmse_lm2    = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %&gt;% 
+    rmse_lm2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y)),
+    rmse_lm3 = map2_dbl(lm_3, test, ~rmse(model = .x, data = .y))) %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
   pivot_longer(
     everything(),
@@ -511,9 +924,11 @@ step(multi.fit, direction=&#39;forward&#39;)</code></pre>
     names_prefix = &quot;rmse_&quot;) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-6-1.png" width="768" /></p>
 </div>
 <div id="model-conclusion" class="section level2">
 <h2>Model Conclusion</h2>
+<p>Month,rainfall,snow depth, and day are good predictors for anticipating the number of daily delay in Manhattan.</p>
 </div>
 
 

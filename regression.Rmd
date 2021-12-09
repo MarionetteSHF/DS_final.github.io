@@ -13,7 +13,6 @@ output:
 library(tidyverse)
 library(lubridate)
 library(modelr)
-library(mgcv)
 library(ggplot2)
 library(viridis)
 library(purrr)
@@ -49,7 +48,7 @@ df = read_csv("data/clean_data.csv") %>%
     month = as.factor(month),
     day = as.factor(day),
    run_type=as.factor(run_type)) %>% 
- select(boro,occur_date,month,day,reason,prcp,snwd,run_type,school_year) %>% 
+ select(boro,occur_date,month,day,prcp,snwd,school_year,tmax,tmin) %>% 
  na.omit()
 ```
 
@@ -79,23 +78,40 @@ Here’s the predictors in our model:
 
 \ ·**day**: weekday of the incident occurred;
 
-\ ·**reason** : reason for delay as entered by staff employed by reporting bus vendor;
-
 \ ·**prcp**:precipitation (tenths of mm)
-
-\ ·**run_type**:designates whether a breakdown or delay occurred on a specific category of busing service;
 
 \ ·**snwd**: snow depth (mm)
 
+\ ·**tmin** Minimum temperature (tenths of degrees C)
+
+
+
 ## Fitting Model
-We propose 3 models for prediction:
 
-\ 1. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd 
+We propose 4 models for prediction:
 
-\ 2. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd + weekday* reason,assuming that there are interaction
+\ 1. Linear Model of daily_delay ~ month + day + snwd + tmin
 
-\ 3. Step_wise Regression Model of daily_delay ~ month + day + reason + prcp + run_type + snwd 
+\ 2. Linear Model of daily_delay ~ month + day  + snwd + tmin+ tmin*day,assuming that there are interaction
 
+\ 3. Linear Model of daily_delay ~ month + day  + prcp
+  
+\ 4. Step_wise Regression Model of daily_delay ~ month + day + prcp + snwd+ tmin
+
+
+
+```{r}
+daily_delay=df %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) 
+  
+lm_1=lm(daily_delay ~ month + day  + snwd + tmin,data=daily_delay)
+lm_2=lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data=daily_delay)
+lm_3=lm(daily_delay ~ month + day+ prcp,data=daily_delay)
+lm_1 %>% broom::tidy() %>% knitr::kable(digits = 2)
+lm_2%>% broom::tidy() %>% knitr::kable(digits = 2)
+lm_3%>% broom::tidy() %>% knitr::kable(digits = 2)
+```
 
 
 
@@ -106,10 +122,12 @@ cv_df=df %>%
   group_by(occur_date) %>% 
   mutate(daily_delay=n()) %>% 
   modelr::crossv_mc(n = 100) %>%
+  mutate_if(is.character, as.factor) %>% 
   mutate(train = map(train, as.tibble), 
          test = map(test, as.tibble)) %>% 
-  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day + prcp  + snwd,data = .x)),
-    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + prcp +  snwd ,data = .x))) 
+  mutate(lm_1 = map(.x = train,~ lm(daily_delay ~ month + day  + snwd + tmin,data = .x)),
+         lm_2 =map(.x = train,~ lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data = .x)),
+         lm_3 =map(.x = train,~ lm(daily_delay ~ month + day+ prcp, data = .x)))
 ```
 
 
@@ -121,17 +139,8 @@ cv=cv_df %>%
     names_to = "model",
     values_to = "data") %>% 
   mutate(data = map(data,broom::tidy))
-
-cv %>%
-  filter(model == "lm_1") %>%
-  unnest(data) 
 ```
 
-```{r}
-cv %>%
-  filter(model == "lm_2") %>%
-  unnest(data) 
-```
 
 ```{r}
 df_1=df %>% 
@@ -140,21 +149,20 @@ df_1=df %>%
   ungroup(occur_date) %>% 
   select(everything())
 
-multi.fit=lm(daily_delay~month + day + prcp  + snwd, data=df_1)
+multi.fit=lm(daily_delay~month + day + prcp  + snwd+ tmin, data=df_1)
 
 summary(multi.fit)
 step(multi.fit, direction='both')
 ```
 
 ## Cross Validation 
-
-
-```{r,eval = FALSE}
-#test$reasonlevel <- Map(union, test$reasonlevel, c("reason","run_type"))
+Predictors we chose above are statistically significant.However,we notice that interaction terms are not contributing to model predictability.We would say lm_1 and lm_3 might be a bit better than lm-2.
+```{r,message=FALSE}
 cv_df %>% 
   mutate(
     rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
-    rmse_lm2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %>% 
+    rmse_lm2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y)),
+    rmse_lm3 = map2_dbl(lm_3, test, ~rmse(model = .x, data = .y))) %>% 
   select(starts_with("rmse")) %>% 
   pivot_longer(
     everything(),
@@ -169,10 +177,7 @@ cv_df %>%
 
 ## Model Conclusion
 
-
-
-
-
+Month,rainfall,snow depth, and day are good predictors for anticipating the number of daily delay in Manhattan.
 
 
 
