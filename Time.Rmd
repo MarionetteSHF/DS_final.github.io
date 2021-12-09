@@ -1,6 +1,5 @@
 ---
 title: "Trend of School Bus Delay Over Time"
-subtitle: "Bike use and bike and microvehicles crashes over time"
 date: 
 output: 
   html_document:
@@ -17,8 +16,8 @@ library(plotly)
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
-	fig.width = 8, 
-  fig.height = 6,
+	fig.width = 4, 
+  fig.height = 2,
   out.width = "90%"
 )
 options(
@@ -44,6 +43,7 @@ On this page we will give you a bird-eye-view of school bus delay in Manhattan f
 
 First,we would like to get a general view of the frequency of school bus delay in Manhattan from the fall semester 2018 to most recently. As we can see from the plot below, Covid-19 has a huge impact on the school bus delay over the time. Before the pandemic(2018-2020), we can see that the school buses are more likely to delay in the fall semester than the spring semesters especially during December and January. This may be caused by extreme weather in the winter and the heavy traffic during holiday seasons.In 2020-2021 when most schools switched online to cope with the pandemic , we can see there is striking low school bus delay. This is not hard to understand given there are less school bus route running and less cars on streets due to lock down and social distancing. In the fall of 2021, schools are switching back to in-person mode with the effort of vaccine enforcement and all other precautions taken, the school bus delay has a similar distribution as the pre-pandemic distribution.
 
+
 ```{r}
 #read data in
 df = read_csv("data/clean_data.csv")
@@ -58,6 +58,7 @@ plot_df = df %>%
 plot_df %>% 
   group_by(occur_date) %>% 
   summarise(delay_count = n(),school_year) %>% 
+  distinct() %>%
   ggplot(aes(x = occur_date, y = delay_count)) +
   geom_point(alpha = .3) +
   geom_smooth(se = FALSE) +
@@ -82,11 +83,17 @@ First we can see that except for the 2020-2021 school year , we have a similar t
 ```{r}
 #overlaping each year's daily delay counts
 
-overlaping_plot = plot_df %>% 
- group_by(occur_date) %>% 
+overlaping_plot = 
+  plot_df %>% 
+  group_by(occur_date) %>% 
   mutate(delay_count = n(),
          day_of_month = lubridate::mday(occur_date),
-         common_day = lubridate::mdy(paste(month, day_of_month,"2021")))%>%
+         common_day = lubridate::mdy(paste(month, day_of_month,"2021"))) %>% 
+  mutate(
+    month = forcats::fct_relevel(as.factor(month), "September", "October", "November", "December", "January", "February", "March", "April", "May", "June")
+  ) %>%
+  select(occur_date, month, common_day, delay_count, school_year) %>%
+  distinct() %>%
   ggplot(aes(x = common_day, y = delay_count, group = school_year, color = school_year)) +
   geom_point(alpha = .3) +
   geom_smooth(se = FALSE) + 
@@ -127,8 +134,9 @@ lets now overlap the school bus delay counts within each school year
 
 
 
+## Monthly Distribution of The Five Different Types of School Bus Delay
 
-Plot4:
+In the fourth plot, we tried to figure out whether there would be a monthly rule for each type of school bus delay. We need to analyze the school bus delay type by type. Overall, 31-45-minute school bus delays and 46-60-minute school bus delays make up the majority part of the total number of school bus delays. For all kinds of school bus delays in the three academic years, the number of delays increases from September to October for all the three academic years. Then, after October, the number of school bus delay decreased first and then kept fluctuating for all types of school bus delays.  All kinds of school bus delays will reach the second peak in either January or February. The 0-15-minute delay, 16-30-minute delay, and 31-45-minute delay are more frequent than usual in May. 31-45-minute delay and 46-60-minute delay are more frequent than usual in March. Thus, October, January, February, March, and May are more probable to encounter school bus delays than else months in a year. 
 ```{r}
 df_date_weather_na = 
   df %>%
@@ -161,8 +169,10 @@ ggplotly(p1)
 ```
 
 
+## Weekly Distribution of The Five Different Types of School Bus Delay
 
-Plot5:
+
+In the fifth plot, we are curious about if there is any rule related to bus delay in each week. We tried to figure out which weekday will be more probable to encounter a bus delay and generally how long the delay will be. According to the result, there isn’t any rule about that. Encountering a school bus delay is almost equivalently frequent in each school day. In 2018-2019 academic year and 2019-2020 academic year, the three most frequent types of school bus delays are 31-45 minutes, 46-60 minutes, and 16-30 minutes in turn.  In 2020-2021 academic year, the three most frequent types of school bus delays are 46-60 minutes, 31-45 minutes, and 16-30 minutes in turn. 
 ```{r}
 df_date_weather_plot2 =
   df_date_weather_na %>%
