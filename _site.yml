@@ -10,9 +10,9 @@ navbar:
     - text: "reason-part"
       href: Reasons-for-bus-delay.html
     - text: "Analysis"
-      href: Report.html
-    - text: "Report"
       href: Data-analysis_Test.html
+    - text: "Report"
+      href: Report.html
     - icon: fa-github fa-lg
       href: https://github.com/MarionetteSHF/DS_final.github.io
 output:
