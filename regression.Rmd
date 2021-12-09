@@ -45,12 +45,10 @@ From previously data exploration and data analysis, we know that there exists so
 df = read_csv("data/clean_data.csv") %>% 
   janitor::clean_names() %>% 
   mutate(
-    reason=recode(reason, "Won`t Start " = "Won't Start"),
-    month = factor(month, levels = c("January","February","March","April","May","June","September","October","November","December")),
-    day = factor(day, levels = c("Monday","Tuesday","Wednesday","Thursday","Friday")),
-   reason=factor(reason, levels =c("Heavy Traffic","Mechanical Problem","Flat Tire","Other","Problem Run","Accident","Late return from Field Trip","Weather Conditions")),
-    run_type=factor(run_type,levels =c("Special Ed AM Run","General Ed AM Run",    
-"Special Ed PM Run","General Ed PM Run","Special Ed Field Trip","General Ed Field Trip","Project Read PM Run"))) %>% 
+    reason=as.factor(reason),
+    month = as.factor(month),
+    day = as.factor(day),
+   run_type=as.factor(run_type)) %>% 
  select(boro,occur_date,month,day,reason,prcp,snwd,run_type,school_year) %>% 
  na.omit()
 ```
@@ -110,8 +108,8 @@ cv_df=df %>%
   modelr::crossv_mc(n = 100) %>%
   mutate(train = map(train, as.tibble), 
          test = map(test, as.tibble)) %>% 
-  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,data = .x)),
-    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,data = .x))) 
+  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day + prcp  + snwd,data = .x)),
+    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + prcp +  snwd ,data = .x))) 
 ```
 
 
@@ -141,18 +139,22 @@ df_1=df %>%
   mutate(daily_delay=n()) %>% 
   ungroup(occur_date) %>% 
   select(everything())
-multi.fit=lm(daily_delay~month + day + reason + prcp + run_type + snwd, data=df_1)
-step(multi.fit, direction='forward')
+
+multi.fit=lm(daily_delay~month + day + prcp  + snwd, data=df_1)
+
+summary(multi.fit)
+step(multi.fit, direction='both')
 ```
 
 ## Cross Validation 
 
 
 ```{r,eval = FALSE}
+#test$reasonlevel <- Map(union, test$reasonlevel, c("reason","run_type"))
 cv_df %>% 
   mutate(
     rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
-    rmse_lm2    = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %>% 
+    rmse_lm2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %>% 
   select(starts_with("rmse")) %>% 
   pivot_longer(
     everything(),
@@ -161,6 +163,8 @@ cv_df %>%
     names_prefix = "rmse_") %>% 
   mutate(model = fct_inorder(model)) %>% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()
+
+
 ```
 
 ## Model Conclusion
