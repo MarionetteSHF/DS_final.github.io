@@ -25,10 +25,40 @@ knitr::include_graphics("./image/3.jpg")
 
 # Data
 
-Data
-The bus delay data in New York were obtained from [NYC open data](https://data.cityofnewyork.us/Transportation/Bus-Breakdown-and-Delays/ez4e-fazm). The data set contains huge amount of data (more than 500,000 observations). Due to the time limit and computer processing power, data from January 1, 2018 to September 30, 2021 were selected. These data contained information about where delay happened, delay time, school name and so on.
+In this project, there are three primary datasets, including `school bus breakdown and delay`, `weather data`, and `opt code`. The dataset of school bus breakdown and delay was obtained from [NYC open data](https://data.cityofnewyork.us/Transportation/Bus-Breakdown-and-Delays/ez4e-fazm). The weather data was gained from [NOAA](https://www.ncei.noaa.gov/metadata/geoportal/rest/metadata/item/gov.noaa.ncdc:C00861/html). The opt code was collected from [data.world](https://data.world/city-of-ny/8wau-idzf/workspace/file?filename=prek-vendors-by-transportation-site-1.csv). On the one hand, for the dataset of school bus breakdown and delay, to focus on the situation of school bus delay in Manhattan under the pandemic, the data of school bus delays in Manhattan generated during 2020-2021 need to be included.  On the other hand, it is unavoidable to consider the complexity of the computer processing power in this circumstance. Then, the school bus delay data from January 1, 2018 to September 30, 2021 were selected. Since weather is one of the reasons which causes school bus delays, we combine the daily weather dataset from NOAA with school bus delay dataset. Since we can only know the opt code of schools in dataset of school bus delay, we combine a opt code dataset to gather the information about the names and addresses of schools. 
 
-The geolocation information of school were obtained from opt1 [data.world](https://data.world/city-of-ny/8wau-idzf/workspace/file?filename=prek-vendors-by-transportation-site-1.csv), opt2 [data.world](https://data.world/city-of-ny/hg3c-2jsy/workspace/file?filename=transportation-sites-1.csv). We join these two opt data sets and school bus delays data to get the location and delays information of schools in New York.
+##### School bus breakdown and delay:
+The dataset contains all the school bus breakdowns and delays happened in NYC. Each row represents a unique school bus breakdown or delay. The information about how long the school bus delays took, when the event happened, why the event happened, where the event happened, the number of students on the bus, school served, and the bus number can be found in the database. The key variables we used include:
+
+`School_Year`: the academic years including `2018-2019`, `2019-2020`, `2020-2021`.
+`Reason`: the reason caused the school bus breakdown or delay. 
+`Schools_Serviced`: the school that the corresponding bus served.
+`Ocurred_On`: The accurate time that school bus delay or breakdown happened. 
+`Boro`: the boro where the case happened.
+`How_Long_Delayed`: how long the delay was.
+
+##### Weather data (NOAA):
+Weather is one of the reasons which caused the school bus delay. To have a deeper analysis about this, it is necessary to consider the weather of the day. Since the difference of weather in Manhattan is not large, we used the weather data of Central Park in NYC to represent the weather of Manhattan. Thus, we selected several important variables in the weather dataset to joint. The key variables we used:
+
+`prcp`: precipitation (tenths of mm)
+`snow`: snowfall (mm)
+`snwd`: snow depth (mm)
+`tmax`: maximum temperature (tenths of degrees C)
+`tmin`: Minimum temperature (tenth of degrees C)
+
+##### OPT code:
+In school bus breakdown and delay data frame, we can see the school serviced variable, but it actually just provides the OPT code instead of the concrete names and addresses. Thus, we collected OPT code list of NYC from Data World. The key variable we used:
+
+`OPT_Code`: OPT code.
+`Name`: School names.
+`Longitude`: Longitude on the map
+`Latitude`: Latitude on the map
+
+To further figure out whether there is any specific distribution or relationship, we converted the date and added the variables month and weekday in the process of cleaning data.
+
+`Month`: months (January to December)
+`Weekday`: weekdays (Monday to Sunday)
+
 
 ```{r,echo=FALSE, out.width="50%", fig.cap="TRAFFIC JAM", fig.align = 'center'}
 knitr::include_graphics("./image/4.webp") 
