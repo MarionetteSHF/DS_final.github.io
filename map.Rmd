@@ -2,9 +2,11 @@
 title: "Location of Delay in NY"
 output: 
   html_document:
-  code_folding: hide
-  always_allow_html: true
-  css: style.css
+    code_folding: hide
+    toc: true
+    toc_float: true
+    always_allow_html: true
+    css: style.css
 ---
   
 ```{r setup, include=FALSE}
