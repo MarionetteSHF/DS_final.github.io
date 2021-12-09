@@ -44,6 +44,10 @@ theme_set(theme_minimal() + theme(legend.position = "right"))
 
 ## Top Contributing Factors of Bus Delay in Manhattan 
 
+\ As seen in the graphs below, the leading contributing factors for bus delay was heavy traffic.It accounts for roughly 90% of reasons of delay.School year 2018-2019 had the greater number of school bus delay and had delayed for more than 30,000 times. Mechanical problem is the second reason for bus delay and it accounts for 6% of all reasons of bus delay.
+Overall,the problem of bus delay has improved in the subsequent school year.
+
+
 ```{r,message=FALSE}
 #Import data
  df=read_csv("data/clean_data.csv")
@@ -127,8 +131,6 @@ plot_4=plot_3 %>%
 ggplotly(plot_4)
 
 ```
-\ As seen in the graph above, the leading contributing factors for bus delay was heavy traffic.It accounts for roughly 90% of reasons of delay.School year 2018-2019 had the greater number of school bus delay and had delayed for more than 30,000 times. Mechanical problem is the second reason for bus delay and it accounts for 6% of all reasons of bus delay.
-Overall,the problem of bus delay has improved in the subsequent school year.
 
 
 
