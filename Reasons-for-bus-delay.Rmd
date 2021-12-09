@@ -81,6 +81,7 @@ plot_1= plot_df %>%
 ggplotly(plot_1)
 ```
 
+
 ```{r,message=FALSE}
 plot_df %>% 
   filter(school_year!="2021-2022") %>% 
@@ -88,8 +89,11 @@ plot_df %>%
   summarize(frequency=n()) %>% 
   pivot_wider(
     names_from = school_year,
-    values_from = frequency)
+    values_from = frequency) %>%
+  knitr::kable(digits = 2)
+```
 
+```{r}
 plot_2=plot_df %>% 
   mutate(reason=fct_infreq(reason)) %>%
   ggplot(aes(x = school_year, fill = reason))+
@@ -148,8 +152,9 @@ plot_6=plot_df %>%
   geom_point()+
   geom_smooth(se=FALSE)+
   labs(
-    title = "The Distribution for Rain across the School Years")
-  
+    title = "The Distribution for Rain across the School Years",
+     x = "Precipitation (mm)",
+    y = "Number of delay")
 ggplotly(plot_6)
 
 ```
@@ -168,7 +173,9 @@ plot_6=plot_df %>%
   geom_point(alpha=0.4)+
   geom_smooth(se=FALSE)+
   labs(
-    title = "The Scatterplot for Snow Depth across The School Years")
+    title = "The Scatterplot for Snow Depth across The School Years",
+      x = "Snow depth (mm)",
+      y = "Number of delay")
  ggplotly(plot_6) 
 ```
 
