@@ -12,10 +12,16 @@ output:
 The cookies anecdote is fun but the school bus delay is a serious issue. The council of the city of New York states that every year starts with a higher rate of delays caused by major traffic because the department of education has not equipped bus companies or drivers with information early enough for drivers to familiarize themselves with their route and map out their timing. Also, it is unconscionable that year after year, the Department of Education's insufficient planning is exacerbating the stress felt by families starting a new school year. We were interested in exploring factors that cause school bus delay and understand the major reason behind bus delay. Distribution of bus delay is also what we want to figure out. 
 
 
+```{r,echo=FALSE, out.width="50%", fig.cap="NYC BUS DELAY", fig.align = 'center'}
+knitr::include_graphics("./image/1.png") 
+```
 
 # Related Work
-According to an analysis by [Chalkbeat in partnership with the CITY](https://ny.chalkbeat.org/2021/9/13/22672760/school-buses-leave-nyc-students-stranded-on-first-day), busing complaints have grown in recent years. In 2019, there were an average of 500 delays a day druing the first weeks of school, which was up 5% from a year before.We realized that school bus delay is a serious issue after reading their work.
+According to an analysis by [Chalkbeat in partnership with the CITY](https://ny.chalkbeat.org/2021/9/13/22672760/school-buses-leave-nyc-students-stranded-on-first-day), busing complaints have grown in recent years. In 2019, there were an average of 500 delays a day during the first weeks of school, which was up 5% from a year before.We realized that school bus delay is a serious issue after reading their work.
 
+```{r,echo=FALSE, out.width="50%", fig.cap="SCHOOL BUS DELAY", fig.align = 'center'}
+knitr::include_graphics("./image/3.jpg") 
+```
 
 # Data
 
@@ -23,6 +29,10 @@ Data
 The bus delay data in New York were obtained from [NYC open data](https://data.cityofnewyork.us/Transportation/Bus-Breakdown-and-Delays/ez4e-fazm). The data set contains huge amount of data (more than 500,000 observations). Due to the time limit and computer processing power, data from January 1, 2018 to September 30, 2021 were selected. These data contained information about where delay happened, delay time, school name and so on.
 
 The geolocation information of school were obtained from opt1 [data.world](https://data.world/city-of-ny/8wau-idzf/workspace/file?filename=prek-vendors-by-transportation-site-1.csv), opt2 [data.world](https://data.world/city-of-ny/hg3c-2jsy/workspace/file?filename=transportation-sites-1.csv). We join these two opt data sets and school bus delays data to get the location and delays information of schools in New York.
+
+```{r,echo=FALSE, out.width="50%", fig.cap="TRAFFIC JAM", fig.align = 'center'}
+knitr::include_graphics("./image/4.webp") 
+```
 
 
 # Data Analysis
