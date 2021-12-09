@@ -35,7 +35,7 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-## Hypothesis Tests
+## Hypothesis Tests about School Years and Delay Reasons
 
 ### Chi-Square Testing Homogeneity between School Years and Delay Reasons
 
@@ -120,12 +120,12 @@ month_df =
   ) 
 ```
 
-## Hypothesis test about monthly delay counts
+## Hypothesis Test about Monthly Delay Counts
 
 We can see from the above analysis that the delays of each year is different. Since this year is not over and the data is not complete, we will consider last year's situation. In the past two years, the number has decreased compared with the previous years. This may be due to the Covid-19, or the New York City government has taken certain measures. So data in 2019- 2020 is of great reference value.
 
 
-### Chi-squared test between monthly delay counts and different months
+### Chi-squared Testing Between Monthly Delay Counts and Different Months
 
 From data exploration, we have notice that the delay counts varies among 
 months. We see from the table that the number of delays in October is different from that in March by almost 3000, and thus, we propose hypothesis that there is no homogeneity in delay counts in each months. Because of Covid-19, schools were closed from April to June so there were no school bus services. We do not take these three months into consideration.
@@ -157,9 +157,9 @@ chisq.test(month_df)
 
 According to above chi-square test result and the x critical value ( = `r qchisq(0.95,6)`). We fail to reject the null hypothesis and conclude that there's no difference of delay counts between months. at 0.05 significant level.
 
-## Hypothesis test about daily delay counts
+## Hypothesis Test about Daily Delay Counts
 
-### Chi-squared test between daily delay counts and different weekdays
+### Chi-squared Testing Between Daily Delay Counts and Different Weekdays
 
 We know there's no difference of delay counts between months. But what about different weekdays? I remembered that I was always late for school on Monday. Is it my personal problem? Maybe because of more school bus delays on Monday? To find out the real reason,we use Chi-squared test to see whether there is  homogeneity in delay counts for each weekday.
 

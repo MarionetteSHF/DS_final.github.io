@@ -146,6 +146,6 @@ map_school_manhattan_density
 
 # Summary
 
-Data in these geolocation and density heatmap plots help identify certain schools in New York City that appear to have more server school bus delayed. They are around the central park and lower Manhattan.
+Data in these geolocation and density heatmap plots help identify certain schools in New York City that appear to have more server school bus delayed. They are around East Harlem and Lower East Side, as well as the Hudson Yards. 
 
 
