@@ -16,8 +16,8 @@ library(plotly)
 knitr::opts_chunk$set(
 	echo = TRUE,
 	warning = FALSE,
-	fig.width = 4, 
-  fig.height = 2,
+	fig.width = 5, 
+  fig.height = 5,
   out.width = "90%"
 )
 options(
