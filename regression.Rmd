@@ -1,0 +1,174 @@
+---
+title: "Regression Analysis"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    always_allow_html: true
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(lubridate)
+library(modelr)
+library(mgcv)
+library(ggplot2)
+library(viridis)
+library(purrr)
+knitr::opts_chunk$set(
+  fig.height = 6,
+  fig.width = 8,
+  message = F,
+  echo = T,
+  warning = F,
+  cache = F
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis",
+  digits = 3
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+set.seed(1)
+
+```
+
+##  Predicting Model for Daily Delay Account
+
+From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, reasons,daily precipitation,run type of bus, daily snow depth as predictors.
+
+```{r load_data,include=FALSE, message=FALSE,warning = FALSE}
+df = read_csv("data/clean_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(
+    reason=recode(reason, "Won`t Start " = "Won't Start"),
+    month = factor(month, levels = c("January","February","March","April","May","June","September","October","November","December")),
+    day = factor(day, levels = c("Monday","Tuesday","Wednesday","Thursday","Friday")),
+   reason=factor(reason, levels =c("Heavy Traffic","Mechanical Problem","Flat Tire","Other","Problem Run","Accident","Late return from Field Trip","Weather Conditions")),
+    run_type=factor(run_type,levels =c("Special Ed AM Run","General Ed AM Run",    
+"Special Ed PM Run","General Ed PM Run","Special Ed Field Trip","General Ed Field Trip","Project Read PM Run"))) %>% 
+ select(boro,occur_date,month,day,reason,prcp,snwd,run_type,school_year) %>% 
+ na.omit()
+```
+
+
+Our interested dependent variable is number of delay across three school years: the amount of delay in Manhattan. We can interpret that this dependent is following poison distribution, so we need to consider regression model for this settings. Based on the graph below, the daily delay across three consecutive school have declined.
+
+```{r,message=FALSE,warning=FALSE}
+daily_df = df %>% 
+  filter(school_year!="2021-2022",
+         boro =="Manhattan") %>% 
+   group_by(occur_date,school_year) %>% 
+   summarize(n=n()) %>% 
+    ggplot(aes(x=occur_date, y=n,fill=school_year))+
+    geom_bar(stat='identity')+
+    facet_grid(~school_year)+
+      labs(
+        title = "Number of Daily Delay",
+        x = "Date of Delay",
+        y = "Count"
+      )
+daily_df
+```
+
+Here’s the predictors in our model:
+
+\ ·**month**: month of the incident occurred;
+
+\ ·**day**: weekday of the incident occurred;
+
+\ ·**reason** : reason for delay as entered by staff employed by reporting bus vendor;
+
+\ ·**prcp**:precipitation (tenths of mm)
+
+\ ·**run_type**:designates whether a breakdown or delay occurred on a specific category of busing service;
+
+\ ·**snwd**: snow depth (mm)
+
+## Fitting Model
+We propose 3 models for prediction:
+
+\ 1. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd 
+
+\ 2. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd + weekday* reason,assuming that there are interaction
+
+\ 3. Step_wise Regression Model of daily_delay ~ month + day + reason + prcp + run_type + snwd 
+
+
+
+
+
+```{r}
+cv_df=df %>% 
+  sample_n(size = 100) %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) %>% 
+  modelr::crossv_mc(n = 100) %>%
+  mutate(train = map(train, as.tibble), 
+         test = map(test, as.tibble)) %>% 
+  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,data = .x)),
+    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,data = .x))) 
+```
+
+
+```{r}
+cv=cv_df %>% 
+  select(starts_with("lm")) %>% 
+  pivot_longer(
+    starts_with("lm"),
+    names_to = "model",
+    values_to = "data") %>% 
+  mutate(data = map(data,broom::tidy))
+
+cv %>%
+  filter(model == "lm_1") %>%
+  unnest(data) 
+```
+
+```{r}
+cv %>%
+  filter(model == "lm_2") %>%
+  unnest(data) 
+```
+
+```{r}
+df_1=df %>% 
+  group_by(occur_date) %>% 
+  mutate(daily_delay=n()) %>% 
+  ungroup(occur_date) %>% 
+  select(everything())
+multi.fit=lm(daily_delay~month + day + reason + prcp + run_type + snwd, data=df_1)
+step(multi.fit, direction='forward')
+```
+
+## Cross Validation 
+
+
+```{r,eval = FALSE}
+cv_df %>% 
+  mutate(
+    rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
+    rmse_lm2    = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %>% 
+  select(starts_with("rmse")) %>% 
+  pivot_longer(
+    everything(),
+    names_to = "model", 
+    values_to = "rmse",
+    names_prefix = "rmse_") %>% 
+  mutate(model = fct_inorder(model)) %>% 
+  ggplot(aes(x = model, y = rmse)) + geom_violin()
+```
+
+## Model Conclusion
+
+
+
+
+
+
+
+

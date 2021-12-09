@@ -1,0 +1,200 @@
+---
+title: "Hypothesis test"
+output: 
+  html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+    always_allow_html: true
+    css: style.css
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(readxl)
+library(patchwork)
+library(plotly)
+library(leaflet)
+library(ggplot2)
+library(lubridate)
+knitr::opts_chunk$set(
+  fig.height = 6,
+  fig.width = 8,
+  message = F,
+  echo = T,
+  warning = F,
+  cache = F
+)
+theme_set(theme_minimal() + theme(legend.position = "bottom"))
+options(
+  ggplot2.continuous.colour = "viridis",
+  ggplot2.continuous.fill = "viridis",
+  digits = 3
+)
+scale_colour_discrete = scale_colour_viridis_d
+scale_fill_discrete = scale_fill_viridis_d
+```
+
+## Hypothesis Tests
+
+### Chi-Square Testing Homogeneity between School Years and Delay Reasons
+
+While looking at the reason of school bus delays, we see that heavy traffic is the main reason and all other reasons plays a minor part. This lead us to ask the question, whether the distribution of school bus delay reasons is the same across 2018-2021 school years.Though we include data in 2021-2022 Fall, yet the counts isn't comparable with other school years. So we only look at the 3 school years including, 2018-2019, 2019-2020, 2020-2021.
+
+To answer our question, we conducted a chi-square test, with:
+
+$H_0$ : The distribution of delay reasons are same across the school years
+$H_1$ : The distribution of delay reasons aren't all the same across the school years.
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+#import data
+df = read_csv("data/clean_data.csv")
+
+#chi-square test data set: df_1
+df_1 = df %>% 
+   janitor::clean_names() %>% 
+  filter(school_year!="2021-2022") %>%
+  select(year,school_year,reason, day,month,prcp:tmin) %>% 
+  na.omit() %>% 
+  group_by(reason,school_year) %>% 
+  summarize(frequency=n())%>%
+  mutate(reason = as.factor(reason),
+    reason = fct_reorder(reason,frequency,.desc = TRUE)
+    ) %>% 
+  pivot_wider(
+    names_from = "reason",
+    values_from = "frequency"
+  ) 
+
+
+#Chi-square test
+chisq.test(df_1[,-1]) %>% 
+   broom::tidy()
+
+#print the table
+knitr::kable(df_1,caption = "Distribution of Delay Reasons across the Years")
+
+```
+
+We can see from the Chi-square test above, we reject the null hypothesis at 99% significant level.This means that the reasons of delay have a different distribution across the school years,though they seem about the same in our bar plots. Our guess is that though the leading reason remains to be heavy traffic, the percentage of heavy traffic being the reason is actually decreasing over the years.
+
+### Chi-Square Testing Homogeneity between Delay Reasons in 2019-2020
+
+Given that the distribution of delay reasons varies from year to year, we decide to look at the nearest pre-pandemic school year. The reason we focus on 2019-2020 school year is that we assume the post pandemic situation should be similar with the nearest pre pandemic situation. 
+
+Looking at the plot in the distribution of delay reasons,we believe that the frequency of different reasons should not be the same. And now we want to verify our assumption using a chi-square test.
+
+```{r}
+#creating a dataframe
+df_2 = df %>% 
+   janitor::clean_names() %>% 
+  filter(school_year =="2019-2020") %>%
+  select(year,school_year,reason) %>% 
+  na.omit() %>% 
+  group_by(reason,school_year) %>% 
+  summarize(frequency=n())%>%
+  mutate(reason = as.factor(reason),
+    reason = fct_reorder(reason,frequency,.desc = TRUE)
+    ) %>% 
+  select(reason,frequency)
+  
+
+#chi-square test
+ chisq.test(df_2[,-1]) %>% 
+  broom::tidy()
+
+#print the table
+knitr::kable(df_2,caption = "Distribution of Delay Reasons in 2019-2020")
+
+```
+We can see from the chi-square test result we should reject the null hypothesis,the frequency of delay reasons are not equally distributed in 2019-2020 school year.
+
+
+
+```{r load_data,echo = FALSE, message=FALSE,warning = FALSE}
+month_df =
+  df %>%
+  filter(school_year == "2019-2020") %>%
+  mutate(
+    month = factor(month, levels = c("January","February","March","April","May","June","September","October","November","December"))
+  ) 
+```
+
+## Hypothesis test about monthly delay counts
+
+We can see from the above analysis that the delays of each year is different. Since this year is not over and the data is not complete, we will consider last year's situation. In the past two years, the number has decreased compared with the previous years. This may be due to the Covid-19, or the New York City government has taken certain measures. So data in 2019- 2020 is of great reference value.
+
+
+### Chi-squared test between monthly delay counts and different months
+
+From data exploration, we have notice that the delay counts varies among 
+months. We see from the table that the number of delays in October is different from that in March by almost 3000, and thus, we propose hypothesis that there is no homogeneity in delay counts in each months. Because of Covid-19, schools were closed from April to June so there were no school bus services. We do not take these three months into consideration.
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+month_df =
+  month_df %>% 
+  select(month, how_long_delayed) %>%
+  group_by(month) %>% 
+  summarize(frequency = n()) 
+
+month_df %>% 
+  knitr::kable(caption = "Delay counts in months")
+```
+
+We use Chi-squared test for multiple groups comparison. 
+
+$H_0$ : there's no difference of delay counts between months.
+
+$H_1$ : at least two delays counts of months are not equal.
+
+```{r}
+month_df =
+  month_df %>% 
+  data.matrix()
+
+chisq.test(month_df)
+```
+
+According to above chi-square test result and the x critical value ( = `r qchisq(0.95,6)`). We fail to reject the null hypothesis and conclude that there's no difference of delay counts between months. at 0.05 significant level.
+
+## Hypothesis test about daily delay counts
+
+### Chi-squared test between daily delay counts and different weekdays
+
+We know there's no difference of delay counts between months. But what about different weekdays? I remembered that I was always late for school on Monday. Is it my personal problem? Maybe because of more school bus delays on Monday? To find out the real reason,we use Chi-squared test to see whether there is  homogeneity in delay counts for each weekday.
+
+```{r,echo = FALSE, message=FALSE,warning = FALSE}
+weekday_df =  
+  df %>% 
+  select(day, how_long_delayed) %>%
+  mutate(day = factor(day, levels = c("Monday","Tuesday","Wednesday","Thursday","Friday"))) %>%
+  group_by(day) %>% 
+  summarize(frequency = n()) 
+
+weekday_df %>% 
+  knitr::kable(caption = "Daily delay counts")
+```
+
+We use Chi-squared test for multiple groups comparison. 
+
+$H_0$ : there's no difference of delay counts for each weekdays.
+
+$H_1$ : at least two delays counts of weekdays are not equal.
+
+```{r}
+weekday_df =
+  weekday_df %>% 
+  data.matrix()
+
+chisq.test(weekday_df)
+```
+
+According to above chi-square test result and the x critical value ( = `r qchisq(0.95,4)`). We fail to reject the null hypothesis and conclude that there's no statistically difference among weekdays at 0.05 significant level. Unfortunately, there is homogeneity in the delay counts for each weekday. It seems that the reason I was always late on Monday was I still missed my weekend.
+
+
+
+
+
+
+
+
