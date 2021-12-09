@@ -11,9 +11,9 @@ navbar:
       href: Reasons-for-bus-delay.html
     - text: 'Analysis'
       menu:
-        - text: 'Test'
+        - text: 'Exploration'
           href: test_zhl.html
-        - text: 'Regression'
+        - text: 'Modeling'
           href: regression.html 
     - text: "Report"
       href: Report.html          
