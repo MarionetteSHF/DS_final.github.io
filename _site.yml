@@ -12,7 +12,7 @@ navbar:
     - text: "Analysis"
       href: Report.html
     - text: "Report"
-      href: Report.html
+      href: Data-analysis_Test.html
     - icon: fa-github fa-lg
       href: https://github.com/MarionetteSHF/DS_final.github.io
 output:
