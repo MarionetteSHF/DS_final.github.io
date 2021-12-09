@@ -336,6 +336,21 @@ div.tocify {
 <li>
   <a href="Reasons-for-bus-delay.html">reason-part</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Analysis
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="test_zhl.html">Test</a>
+    </li>
+    <li>
+      <a href="regression.html">Regression</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="Report.html">Report</a>
 </li>
@@ -393,22 +408,26 @@ daily_df</code></pre>
 <p> ·<strong>prcp</strong>:precipitation (tenths of mm)</p>
 <p> ·<strong>run_type</strong>:designates whether a breakdown or delay occurred on a specific category of busing service;</p>
 <p> ·<strong>snwd</strong>: snow depth (mm)</p>
+<p> ·<strong>tmin</strong> Minimum temperature (tenths of degrees C)</p>
 </div>
 <div id="fitting-model" class="section level2">
 <h2>Fitting Model</h2>
-<p>We propose 3 models for prediction:</p>
-<p> 1. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
-<p> 2. General Model of daily_delay ~ month + day + reason + prcp + run_type + snwd + weekday* reason,assuming that there are interaction</p>
-<p> 3. Step_wise Regression Model of daily_delay ~ month + day + reason + prcp + run_type + snwd</p>
+<p>We propose 4 models for prediction:</p>
+<p> 1. Linear Model of daily_delay ~ month + day + snwd + tmin</p>
+<p> 2. Linear Model of daily_delay ~ month + day + snwd + tmin+ tmin*day,assuming that there are interaction</p>
+<p> 3. Linear Model of daily_delay ~ month + day + prcp</p>
+<p> 4. Step_wise Regression Model of daily_delay ~ month + day + prcp + snwd+ tmin</p>
 <pre class="r"><code>cv_df=df %&gt;% 
   sample_n(size = 100) %&gt;% 
   group_by(occur_date) %&gt;% 
   mutate(daily_delay=n()) %&gt;% 
   modelr::crossv_mc(n = 100) %&gt;%
+  mutate_if(is.character, as.factor) %&gt;% 
   mutate(train = map(train, as.tibble), 
          test = map(test, as.tibble)) %&gt;% 
-  mutate(lm_1 = map(.x = train,~ lm((daily_delay) ~ month + day +reason+ prcp + run_type + snwd,data = .x)),
-    lm_2 = map(.x = train, ~ lm((daily_delay) ~month + day + reason + prcp + run_type + snwd + day*reason,data = .x))) </code></pre>
+  mutate(lm_1 = map(.x = train,~ lm(daily_delay ~ month + day  + snwd + tmin,data = .x)),
+         lm_2 =map(.x = train,~ lm(daily_delay ~ month + day+ snwd + tmin+tmin*day,data = .x)),
+         lm_3 =map(.x = train,~ lm(daily_delay ~ month + day+ prcp, data = .x)))</code></pre>
 <pre class="r"><code>cv=cv_df %&gt;% 
   select(starts_with(&quot;lm&quot;)) %&gt;% 
   pivot_longer(
@@ -420,89 +439,131 @@ daily_df</code></pre>
 cv %&gt;%
   filter(model == &quot;lm_1&quot;) %&gt;%
   unnest(data) </code></pre>
-<pre><code>## # A tibble: 2,166 × 6
-##    model term           estimate std.error statistic    p.value
-##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-##  1 lm_1  (Intercept)      1.40       0.265     5.26  0.00000214
-##  2 lm_1  monthFebruary    0.176      0.338     0.521 0.604     
-##  3 lm_1  monthMarch       0.373      0.276     1.35  0.182     
-##  4 lm_1  monthApril       0.603      0.325     1.86  0.0682    
-##  5 lm_1  monthMay         0.0544     0.367     0.148 0.883     
-##  6 lm_1  monthJune       -0.220      0.348    -0.632 0.530     
-##  7 lm_1  monthSeptember  -0.196      0.376    -0.522 0.604     
-##  8 lm_1  monthOctober    -0.232      0.281    -0.825 0.413     
-##  9 lm_1  monthNovember   -0.0381     0.307    -0.124 0.902     
-## 10 lm_1  monthDecember    0.453      0.302     1.50  0.139     
-## # … with 2,156 more rows</code></pre>
+<pre><code>## # A tibble: 1,600 × 6
+##    model term           estimate std.error statistic       p.value
+##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+##  1 lm_1  (Intercept)      1.91       0.286     6.70  0.00000000674
+##  2 lm_1  monthDecember   -0.327      0.294    -1.11  0.271        
+##  3 lm_1  monthFebruary    0.162      0.285     0.568 0.572        
+##  4 lm_1  monthJanuary    -0.341      0.367    -0.930 0.356        
+##  5 lm_1  monthJune       -0.455      0.422    -1.08  0.286        
+##  6 lm_1  monthMarch       0.0664     0.313     0.212 0.833        
+##  7 lm_1  monthMay        -0.0378     0.347    -0.109 0.914        
+##  8 lm_1  monthNovember   -0.331      0.280    -1.18  0.241        
+##  9 lm_1  monthOctober    -0.554      0.305    -1.82  0.0738       
+## 10 lm_1  monthSeptember  -0.452      0.409    -1.10  0.274        
+## # … with 1,590 more rows</code></pre>
 <pre class="r"><code>cv %&gt;%
   filter(model == &quot;lm_2&quot;) %&gt;%
   unnest(data) </code></pre>
-<pre><code>## # A tibble: 3,342 × 6
-##    model term           estimate std.error statistic    p.value
-##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-##  1 lm_2  (Intercept)      1.38       0.254     5.44  0.00000117
-##  2 lm_2  monthFebruary    0.225      0.325     0.692 0.492     
-##  3 lm_2  monthMarch       0.343      0.265     1.29  0.201     
-##  4 lm_2  monthApril       0.564      0.312     1.81  0.0757    
-##  5 lm_2  monthMay         0.0666     0.352     0.189 0.851     
-##  6 lm_2  monthJune       -0.246      0.334    -0.737 0.464     
-##  7 lm_2  monthSeptember  -0.185      0.361    -0.512 0.610     
-##  8 lm_2  monthOctober    -0.228      0.270    -0.846 0.401     
-##  9 lm_2  monthNovember   -0.0565     0.295    -0.191 0.849     
-## 10 lm_2  monthDecember    0.596      0.295     2.02  0.0485    
-## # … with 3,332 more rows</code></pre>
+<pre><code>## # A tibble: 2,000 × 6
+##    model term           estimate std.error statistic  p.value
+##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+##  1 lm_2  (Intercept)      2.42       0.288     8.41  1.11e-11
+##  2 lm_2  monthDecember   -0.574      0.276    -2.08  4.21e- 2
+##  3 lm_2  monthFebruary    0.183      0.269     0.681 4.98e- 1
+##  4 lm_2  monthJanuary    -0.584      0.348    -1.68  9.89e- 2
+##  5 lm_2  monthJune        0.0698     0.439     0.159 8.74e- 1
+##  6 lm_2  monthMarch      -0.231      0.298    -0.776 4.41e- 1
+##  7 lm_2  monthMay         0.294      0.347     0.849 3.99e- 1
+##  8 lm_2  monthNovember   -0.407      0.263    -1.55  1.26e- 1
+##  9 lm_2  monthOctober    -0.340      0.288    -1.18  2.42e- 1
+## 10 lm_2  monthSeptember  -0.106      0.390    -0.273 7.86e- 1
+## # … with 1,990 more rows</code></pre>
+<pre class="r"><code>cv %&gt;%
+  filter(model == &quot;lm_3&quot;) %&gt;%
+  unnest(data) </code></pre>
+<pre><code>## # A tibble: 1,500 × 6
+##    model term           estimate std.error statistic       p.value
+##    &lt;chr&gt; &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
+##  1 lm_3  (Intercept)      1.77       0.264    6.71   0.00000000588
+##  2 lm_3  monthDecember   -0.109      0.284   -0.384  0.702        
+##  3 lm_3  monthFebruary    0.185      0.271    0.682  0.498        
+##  4 lm_3  monthJanuary    -0.225      0.335   -0.672  0.504        
+##  5 lm_3  monthJune       -0.382      0.368   -1.04   0.303        
+##  6 lm_3  monthMarch       0.132      0.289    0.457  0.649        
+##  7 lm_3  monthMay        -0.0251     0.313   -0.0800 0.936        
+##  8 lm_3  monthNovember   -0.303      0.273   -1.11   0.271        
+##  9 lm_3  monthOctober    -0.523      0.290   -1.80   0.0762       
+## 10 lm_3  monthSeptember  -0.306      0.375   -0.815  0.418        
+## # … with 1,490 more rows</code></pre>
 <pre class="r"><code>df_1=df %&gt;% 
   group_by(occur_date) %&gt;% 
   mutate(daily_delay=n()) %&gt;% 
   ungroup(occur_date) %&gt;% 
   select(everything())
-multi.fit=lm(daily_delay~month + day + reason + prcp + run_type + snwd, data=df_1)
-step(multi.fit, direction=&#39;forward&#39;)</code></pre>
-<pre><code>## Start:  AIC=501067
-## daily_delay ~ month + day + reason + prcp + run_type + snwd</code></pre>
+
+multi.fit=lm(daily_delay~month + day + prcp  + snwd+ tmin, data=df_1)
+
+summary(multi.fit)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = daily_delay ~ month + day + reason + prcp + run_type + 
-##     snwd, data = df_1)
+## lm(formula = daily_delay ~ month + day + prcp + snwd + tmin, 
+##     data = df_1)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -233.7  -35.9   12.4   40.3  119.0 
 ## 
 ## Coefficients:
-##                       (Intercept)                      monthFebruary  
-##                          204.8999                             4.9389  
-##                        monthMarch                         monthApril  
-##                          -15.7781                           -87.2424  
-##                          monthMay                          monthJune  
-##                          -68.0703                           -95.0347  
-##                    monthSeptember                       monthOctober  
-##                          -17.9412                             7.1682  
-##                     monthNovember                      monthDecember  
-##                           13.1501                             8.1910  
-##                        dayTuesday                       dayWednesday  
-##                           -4.3651                            -7.2219  
-##                       dayThursday                          dayFriday  
-##                           -9.5545                           -11.8477  
-##          reasonMechanical Problem                    reasonFlat Tire  
-##                          -14.0992                            -6.9486  
-##                       reasonOther                  reasonProblem Run  
-##                          -11.3188                            -5.4150  
-##                    reasonAccident  reasonLate return from Field Trip  
-##                          -17.2673                             6.1906  
-##          reasonWeather Conditions                               prcp  
-##                           16.1362                             0.0549  
-##         run_typeGeneral Ed AM Run          run_typeSpecial Ed PM Run  
-##                           -7.6709                             2.0439  
-##         run_typeGeneral Ed PM Run      run_typeSpecial Ed Field Trip  
-##                          -13.4347                            14.8374  
-##     run_typeGeneral Ed Field Trip        run_typeProject Read PM Run  
-##                           13.3863                            15.8668  
-##                              snwd  
-##                           -0.4192</code></pre>
+##                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)    130.34001    1.14697  113.64  &lt; 2e-16 ***
+## monthDecember   71.37443    1.26607   56.37  &lt; 2e-16 ***
+## monthFebruary   69.92198    1.28330   54.49  &lt; 2e-16 ***
+## monthJanuary    56.46312    1.27061   44.44  &lt; 2e-16 ***
+## monthJune       30.12089    1.53009   19.69  &lt; 2e-16 ***
+## monthMarch      53.09433    1.24254   42.73  &lt; 2e-16 ***
+## monthMay        38.68639    1.30074   29.74  &lt; 2e-16 ***
+## monthNovember   92.51235    1.17221   78.92  &lt; 2e-16 ***
+## monthOctober   111.17046    1.15440   96.30  &lt; 2e-16 ***
+## monthSeptember 106.57404    1.32609   80.37  &lt; 2e-16 ***
+## dayMonday       15.53969    0.75741   20.52  &lt; 2e-16 ***
+## dayThursday      2.61401    0.74148    3.53  0.00042 ***
+## dayTuesday       8.56736    0.74749   11.46  &lt; 2e-16 ***
+## dayWednesday     5.68897    0.74309    7.66  1.9e-14 ***
+## prcp             0.07600    0.00296   25.71  &lt; 2e-16 ***
+## snwd            -0.51022    0.01150  -44.38  &lt; 2e-16 ***
+## tmin            -3.65887    0.05667  -64.56  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 58.7 on 62221 degrees of freedom
+## Multiple R-squared:  0.306,  Adjusted R-squared:  0.306 
+## F-statistic: 1.71e+03 on 16 and 62221 DF,  p-value: &lt;2e-16</code></pre>
+<pre class="r"><code>step(multi.fit, direction=&#39;both&#39;)</code></pre>
+<pre><code>## Start:  AIC=506860
+## daily_delay ~ month + day + prcp + snwd + tmin
+## 
+##         Df Sum of Sq      RSS    AIC
+## &lt;none&gt;               2.14e+08 506860
+## - day    4   1726245 2.16e+08 507352
+## - prcp   1   2274764 2.16e+08 507516
+## - snwd   1   6778341 2.21e+08 508798
+## - tmin   1  14345529 2.28e+08 510894
+## - month  9  57893188 2.72e+08 521736</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = daily_delay ~ month + day + prcp + snwd + tmin, 
+##     data = df_1)
+## 
+## Coefficients:
+##    (Intercept)   monthDecember   monthFebruary    monthJanuary       monthJune  
+##        130.340          71.374          69.922          56.463          30.121  
+##     monthMarch        monthMay   monthNovember    monthOctober  monthSeptember  
+##         53.094          38.686          92.512         111.170         106.574  
+##      dayMonday     dayThursday      dayTuesday    dayWednesday            prcp  
+##         15.540           2.614           8.567           5.689           0.076  
+##           snwd            tmin  
+##         -0.510          -3.659</code></pre>
 </div>
 <div id="cross-validation" class="section level2">
 <h2>Cross Validation</h2>
+<p>Predictors we chose above are statistically significant.However,we notice that interaction terms are not contributing to model predictability.We would say lm_1 and lm_3 might be a bit better than lm-2.</p>
 <pre class="r"><code>cv_df %&gt;% 
   mutate(
     rmse_lm1 = map2_dbl(lm_1, test, ~rmse(model = .x, data = .y)),
-    rmse_lm2    = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y))) %&gt;% 
+    rmse_lm2 = map2_dbl(lm_2, test, ~rmse(model = .x, data = .y)),
+    rmse_lm3 = map2_dbl(lm_3, test, ~rmse(model = .x, data = .y))) %&gt;% 
   select(starts_with(&quot;rmse&quot;)) %&gt;% 
   pivot_longer(
     everything(),
@@ -511,9 +572,11 @@ step(multi.fit, direction=&#39;forward&#39;)</code></pre>
     names_prefix = &quot;rmse_&quot;) %&gt;% 
   mutate(model = fct_inorder(model)) %&gt;% 
   ggplot(aes(x = model, y = rmse)) + geom_violin()</code></pre>
+<p><img src="regression_files/figure-html/unnamed-chunk-7-1.png" width="768" /></p>
 </div>
 <div id="model-conclusion" class="section level2">
 <h2>Model Conclusion</h2>
+<p>Month,rainfall,snow depth, and day are good predictors for anticipating the number of daily delay in Manhattan.</p>
 </div>
 
 
