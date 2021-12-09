@@ -9,6 +9,8 @@ navbar:
       href: map.html
     - text: "reason-part"
       href: Reasons-for-bus-delay.html
+    - text: "Analysis"
+      href: Report.html
     - text: "Report"
       href: Report.html
     - icon: fa-github fa-lg
