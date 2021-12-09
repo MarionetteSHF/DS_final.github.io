@@ -22,8 +22,14 @@ According to an analysis by [Chalkbeat in partnership with the CITY](https://ny.
 Data
 The bus delay data in New York were obtained from [NYC open data](https://data.cityofnewyork.us/Transportation/Bus-Breakdown-and-Delays/ez4e-fazm). The data set contains huge amount of data (more than 500,000 observations). Due to the time limit and computer processing power, data from January 1, 2018 to September 30, 2021 were selected. These data contained information about where delay happened, delay time, school name and so on.
 
+The geolocation information of school were obtained from opt1 [data.world](https://data.world/city-of-ny/8wau-idzf/workspace/file?filename=prek-vendors-by-transportation-site-1.csv), opt2 [data.world](https://data.world/city-of-ny/hg3c-2jsy/workspace/file?filename=transportation-sites-1.csv). We join these two opt data sets and school bus delays data to get the location and delays information of schools in New York.
+
 
 # Data Analysis
+
+
+
+
 
 # Data Explortary
 
