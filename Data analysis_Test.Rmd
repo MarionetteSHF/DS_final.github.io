@@ -72,7 +72,8 @@ chisq.test(df_1[,-1]) %>%
    broom::tidy()
 
 #print the table
-knitr::kable(df_1,caption = "Distribution of Delay Reasons across the Years")
+df_1 %>% t() %>% 
+knitr::kable(caption = "Distribution of Delay Reasons across the Years")
 
 ```
 
@@ -155,7 +156,7 @@ month_df =
 chisq.test(month_df)
 ```
 
-According to above chi-square test result and the x critical value ( = `r qchisq(0.95,6)`). We fail to reject the null hypothesis and conclude that there's no difference of delay counts between months. at 0.05 significant level.
+According to above chi-square test result and the x critical value ( = `r qchisq(0.95,6)`). We fail to reject the null hypothesis and conclude that there's no difference of delay counts between months. at 0.05 significant level. The counter-intuitive result may be caused by the lock down during April to May of 2020.We don't have any information on these 2 month therefore we are only testing the "winter month".
 
 ## Hypothesis test about daily delay counts
 
