@@ -106,7 +106,6 @@ plot_3=plot_df %>%
    group_by(school_year,reason) %>% 
    summarize(frequency=n()) %>% 
    ungroup(reason) %>% 
-   filter(reason!= "Other") %>% 
    mutate(school_year=factor(school_year),
           school_year=fct_relevel(school_year,"2018-2019","2019-2020","2020-2021"),
           proportion=round(frequency/sum(frequency), 2),
