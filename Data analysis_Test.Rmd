@@ -44,6 +44,7 @@ While looking at the reason of school bus delays, we see that heavy traffic is t
 To answer our question, we conducted a chi-square test, with:
 
 $H_0$ : The distribution of delay reasons are same across the school years
+
 $H_1$ : The distribution of delay reasons aren't all the same across the school years.
 
 ```{r,echo = FALSE, message=FALSE,warning = FALSE}
