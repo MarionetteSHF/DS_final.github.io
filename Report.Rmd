@@ -101,7 +101,7 @@ we also noticed that the delay counts varies among each month. We can see from t
 
 We know there's no difference of delay counts between months in 2019-2020. But what about different weekdays? I remembered that I was always late for school on Monday. Is it my personal problem? Maybe because of more school bus delays on Monday? To find out the real reason,we use Chi-squared test to see whether there is  homogeneity in delay counts for each weekday. According to the chi-square test result we conclude that there's no statistically difference among weekdays at 0.05 significant level. Unfortunately, there is homogeneity in the delay counts for each weekday. It seems that the reason I was always late on Monday was I still missed my weekend.
 
-## Modeling
+### Modeling
 
 From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the data set deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, daily precipitation,daily snow depth,and minimum temperature as predictors.We propose 3 models for prediction:
 
