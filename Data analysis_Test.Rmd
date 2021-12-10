@@ -87,6 +87,11 @@ Given that the distribution of delay reasons varies from year to year, we decide
 
 Looking at the plot in the distribution of delay reasons,we believe that the frequency of different reasons should not be the same. And now we want to verify our assumption using a chi-square test.
 
+$H_0$ : The distribution of delay reasons are same within 2019-2020 school years
+
+
+$H_1$ : The distribution of delay reasons aren't all the same within 2019-2020 the school years.
+
 ```{r}
 #creating a dataframe
 df_2 = df %>% 
@@ -110,6 +115,7 @@ df_2 = df %>%
 knitr::kable(df_2,caption = "Distribution of Delay Reasons in 2019-2020")
 
 ```
+
 We can see from the chi-square test result we should reject the null hypothesis,the frequency of delay reasons are not equally distributed in 2019-2020 school year.
 
 
@@ -144,7 +150,7 @@ month_df %>%
   knitr::kable(caption = "Delay counts in months")
 ```
 
-We use Chi-squared test for multiple groups comparison. 
+We use Chi-squared test for homogeneity of months. 
 
 $H_0$ : there's no difference of delay counts between months.
 
@@ -178,7 +184,7 @@ weekday_df %>%
   knitr::kable(caption = "Daily delay counts")
 ```
 
-We use Chi-squared test for multiple groups comparison. 
+We use Chi-squared test for homogeneity of weekdays. 
 
 $H_0$ : there's no difference of delay counts for each weekdays.
 
