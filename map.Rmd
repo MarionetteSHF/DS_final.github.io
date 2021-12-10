@@ -59,7 +59,7 @@ avergae_delayed %>%
 
 For reference, here is a helpful map of the neighborhoods in New York
 
-[Source:  MapsManhattan](https://jennisparks.com/hand-drawn-map-of-new-york)
+[Source:  MapsNewYork](https://jennisparks.com/hand-drawn-map-of-new-york)
 
 
 ```{r, echo=FALSE, out.width="50%", fig.cap="New York Map", fig.align = 'center'}
@@ -152,7 +152,7 @@ map_school_manhattan_density =
   layout(
     mapbox = list(
       style = 'open-street-map',
-      zoom =10,
+      zoom =8,
       center = list(lon = -73.96, lat = 40.77)),
     title = "Density Heatmap of School Buses delayed in Manhattan")
 
