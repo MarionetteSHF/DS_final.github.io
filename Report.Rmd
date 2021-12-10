@@ -32,32 +32,45 @@ In this project, there are three primary datasets, including `school bus breakdo
 The dataset contains all the school bus breakdowns and delays happened in NYC. Each row represents a unique school bus breakdown or delay. The information about how long the school bus delays took, when the event happened, why the event happened, where the event happened, the number of students on the bus, school served, and the bus number can be found in the database. The key variables we used include:
 
 `School_Year`: the academic years including `2018-2019`, `2019-2020`, `2020-2021`.
+
 `Reason`: the reason caused the school bus breakdown or delay. 
+
 `Schools_Serviced`: the school that the corresponding bus served.
+
 `Ocurred_On`: The accurate time that school bus delay or breakdown happened. 
+
 `Boro`: the boro where the case happened.
+
 `How_Long_Delayed`: how long the delay was.
 
 ##### Weather data (NOAA):
 Weather is one of the reasons which caused the school bus delay. To have a deeper analysis about this, it is necessary to consider the weather of the day. Since the difference of weather in Manhattan is not large, we used the weather data of Central Park in NYC to represent the weather of Manhattan. Thus, we selected several important variables in the weather dataset to joint. The key variables we used:
 
 `prcp`: precipitation (tenths of mm)
+
 `snow`: snowfall (mm)
+
 `snwd`: snow depth (mm)
+
 `tmax`: maximum temperature (tenths of degrees C)
+
 `tmin`: Minimum temperature (tenth of degrees C)
 
 ##### OPT code:
 In school bus breakdown and delay data frame, we can see the school serviced variable, but it actually just provides the OPT code instead of the concrete names and addresses. Thus, we collected OPT code list of NYC from Data World. The key variable we used:
 
 `OPT_Code`: OPT code.
+
 `Name`: School names.
-`Longitude`: Longitude on the map
-`Latitude`: Latitude on the map
+
+`Longitude`: Longitude on the map.
+
+`Latitude`: Latitude on the map.
 
 To further figure out whether there is any specific distribution or relationship, we converted the date and added the variables month and weekday in the process of cleaning data.
 
 `Month`: months (January to December)
+
 `Weekday`: weekdays (Monday to Sunday)
 
 
