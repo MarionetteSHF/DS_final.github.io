@@ -63,24 +63,6 @@ plot_df = df %>%
   na.omit()
 ```
 
-```{r,message=FALSE}
-plot_1= plot_df %>% 
-  group_by(reason,school_year) %>% 
-  summarize(frequency=n())%>%
-  mutate(reason = as.factor(reason),
-    reason = fct_reorder(reason,frequency,.desc = TRUE))%>% 
-  ggplot(aes(x = reason, y = frequency,fill=reason)) + 
-  geom_bar(stat='identity')+
-  facet_grid(.~school_year,scales = "free") + 
-  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), legend.position = "none") +
-  labs(
-    title = "Top Contributing Factors for Bus Delay in Manhattan in Count ",
-    x = "Reason",
-    y = "Frequency"
-  ) 
-ggplotly(plot_1)
-```
-
 
 ```{r,message=FALSE}
 plot_df %>% 
@@ -120,18 +102,7 @@ plot_3 %>%
 plot_ly(labels = ~reason, values = ~proportion, type = 'pie') %>% 
   layout(title = 'Top Reasons for Bus Delay')
 
-plot_4=plot_3 %>% 
-  ggplot(aes(x = reason, y = proportion, fill = school_year)) +
-  geom_bar(stat = "identity") +
-  facet_grid( . ~school_year, scales = "free_x", space = "free_x") +
-  scale_y_continuous(labels = scales::percent) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 1, hjust = 1), legend.position = "none") +
-  labs(
-    title = "The Top Contributing Factors for Bus Delay in each School Year in Percentage",
-    x = "Reasons",
-    y = "Proportion"
-  ) 
-ggplotly(plot_4)
+
 
 ```
 
