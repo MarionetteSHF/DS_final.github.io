@@ -111,7 +111,7 @@ From previously data exploration and data analysis, we know that there exists so
 
 \ 3. Linear Model of daily_delay ~ month + day  + prcp
 
-We performed cross validation using these 3 models and model3 gives us a relatively low rmse . So we concluded that, to predict how many school bus delay may occur Mahanttan in one day, we would use month,rainfall,snow depth, and weekday as predictors .
+We performed cross validation using these 3 models and model3 gives us a relatively low rmse . So we concluded that, to predict how many school bus delay may occur Manhattan in one day, we would use month,rainfall,snow depth, and weekday as predictors .
 
 
 
