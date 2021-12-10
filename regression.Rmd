@@ -53,7 +53,7 @@ df = read_csv("data/clean_data.csv") %>%
 ```
 
 
-Our interested dependent variable is number of delay across three school years: the amount of delay in Manhattan. We can interpret that this dependent is following poison distribution, so we need to consider regression model for this settings. Based on the graph below, the daily delay across three consecutive school have declined.
+Our interested dependent variable is number of delay across three school years: the amount of delay in Manhattan. Based on the graph below, the daily delay across three consecutive school year have declined.
 
 ```{r,message=FALSE,warning=FALSE}
 daily_df = df %>% 
