@@ -62,8 +62,9 @@ plot_df = df %>%
   select(year,school_year,reason, day,month,prcp:tmin) %>% 
   na.omit()
 ```
+<br></br>
 
-
+_The table below shows the number of delays for specific factors in each school year._
 ```{r,message=FALSE}
 plot_df %>% 
   filter(school_year!="2021-2022") %>% 
@@ -75,6 +76,8 @@ plot_df %>%
   knitr::kable(digits = 2)
 ```
 
+<br></br>
+_The stacked bar graph below shows the number of delays in each school year._
 ```{r}
 plot_2=plot_df %>% 
   mutate(reason=fct_infreq(reason)) %>%
@@ -85,7 +88,8 @@ plot_2=plot_df %>%
 ggplotly(plot_2)
 ```
 
-
+<br></br>
+_The pie chart below shows the proportion of the specific factors across three years._
 ```{r,message=FALSE,warning=FALSE}
 plot_3=plot_df %>% 
    filter(school_year!="2021-2022") %>% 
@@ -107,11 +111,13 @@ plot_ly(labels = ~reason, values = ~proportion, type = 'pie') %>%
 ```
 
 
+<br></br>
+**Based on the graph above, we know that heavy traffic accounts for the majority of delays in Manhattan. Thus, we only look at the relationship between heavy traffic and other possible factors.**
 
+### Examine the Association between Number of Heavy Traffic and Heavy Rain across The School Years
 
-## Examine the Association between Number of Heavy Traffic and Heavy Rain across The School Years
+\ Based on the graph above, we know that heavy traffic accounts for the majority of delays in Manhattan. Thus, we only look at the relationship between heavy traffic and other possible factors. After looking at the graph, we can see there is no association between heavy traffic and heavy rain.Weather may not be the main reason leading to the bus delay. It is interesting to see more traffic occurring in average 100mm of rainfall, which is considered as light rain or moderate rain.
 
-\ After looking at the graph, we can see there is no association between heavy traffic and heavy rain.Weather may not be the main reason leading to the bus delay. It is interesting to see more traffic occurring in average 100mm of rainfall, which is considered as light rain or moderate rain.
 ```{r,message=FALSE,warning=FALSE}
 plot_6=plot_df %>% 
   filter(school_year!="2021-2022",
@@ -130,7 +136,7 @@ ggplotly(plot_6)
 
 ```
 
-## Examine the Association between Reasons of Bus Delay and Snow Depth across the School Year
+### Examine the Association between Reasons of Bus Delay and Snow Depth across the School Year
 
 It is interesting to see there is an inverse relationship between snow depth and number of cases of heavy traffic in 2018-2019 school year. However, it seems that there is no association between snow depth and heavy traffic in 2020-2021.We are unable to analyze the heavy traffic and snow depth in 2019-2020 because there are not many snowy days.
 
@@ -151,9 +157,8 @@ plot_6=plot_df %>%
 ```
 
 
-## Examine the Association between Heavy Traffic across the Weekdays
-\ Based on the graph below, we can see the heavy traffic is more frequently happen on Thursday across three school years.
-It is less likely to occur on Monday in 2018-2019 and 2019-2020. Due to the interruption of COVID-19, people spend more time at home or for quarantine. Therefore,it may be the reason why the number of heavy traffic has sufficiently declining. It also can explain why the number of delays is equally distributed across the weekdays.
+### Examine the Association between Heavy Traffic across the Weekdays
+\ Based on the graph below, we can see the heavy traffic is more frequently happen on Thursday across three school years.It is less likely to occur on Monday in 2018-2019 and 2019-2020. Due to the interruption of COVID-19, people spend more time at home or for quarantine. Therefore,it may be the reason why the number of heavy traffic has sufficiently declining. It also can explain why the number of delays is equally distributed across the weekdays.
 
 ```{r,message=FALSE}
 plot_df %>% 
