@@ -36,7 +36,7 @@ set.seed(1)
 
 ```
 
-##  Predicting Model for Daily Delay Account
+##  Predicting Model for Daily Delay Count
 
 From previously data exploration and data analysis, we know that there exists some interesting relationship between bus delay and weather,location, and a variety of reasons.Here, we want to explore the dataset more deeper to predict the number of daily delay in Manhattan as our outcome and month, weekday, daily precipitation,daily snow depth,and minimum temperature as predictors.
 
