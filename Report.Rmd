@@ -80,7 +80,7 @@ knitr::include_graphics("./image/4.webp")
 
 ## Mapping 
 
-We considered the geolocation of schools in New York city from 2015 to 2019. Compared with other areas, schools in Manhattan have more delays in school buses, and the time of delays are longer. Therefore our project is mainly for schools in Manhattan. Data in these geolocation and density heatmap plots helped identify certain neighborhoods in Manhattan that appear to have more and longer delays  and they include East Harlem and Lower East Side, as well as the Hudson Yards.
+We considered the geolocation of schools in New York city from 2015 to 2019. The reason we use four years data is that opt codes data set is incomplete for each year.Compared with other areas, schools in Manhattan have more delays in school buses, and the time of delays are longer. Therefore our project is mainly for schools in Manhattan. Data in these geolocation and density heatmap plots helped identify certain neighborhoods in Manhattan that appear to have more and longer delays  and they include East Harlem and Lower East Side, as well as the Hudson Yards.
 
 ## Delay Trend of School Bus
 

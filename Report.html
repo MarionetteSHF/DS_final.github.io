@@ -332,19 +332,32 @@ SCHOOL BUS DELAY
 <div id="school-bus-breakdown-and-delay" class="section level5">
 <h5>School bus breakdown and delay:</h5>
 <p>The dataset contains all the school bus breakdowns and delays happened in NYC. Each row represents a unique school bus breakdown or delay. The information about how long the school bus delays took, when the event happened, why the event happened, where the event happened, the number of students on the bus, school served, and the bus number can be found in the database. The key variables we used include:</p>
-<p><code>School_Year</code>: the academic years including <code>2018-2019</code>, <code>2019-2020</code>, <code>2020-2021</code>. <code>Reason</code>: the reason caused the school bus breakdown or delay. <code>Schools_Serviced</code>: the school that the corresponding bus served. <code>Ocurred_On</code>: The accurate time that school bus delay or breakdown happened. <code>Boro</code>: the boro where the case happened. <code>How_Long_Delayed</code>: how long the delay was.</p>
+<p><code>School_Year</code>: the academic years including <code>2018-2019</code>, <code>2019-2020</code>, <code>2020-2021</code>.</p>
+<p><code>Reason</code>: the reason caused the school bus breakdown or delay.</p>
+<p><code>Schools_Serviced</code>: the school that the corresponding bus served.</p>
+<p><code>Ocurred_On</code>: The accurate time that school bus delay or breakdown happened.</p>
+<p><code>Boro</code>: the boro where the case happened.</p>
+<p><code>How_Long_Delayed</code>: how long the delay was.</p>
 </div>
 <div id="weather-data-noaa" class="section level5">
 <h5>Weather data (NOAA):</h5>
 <p>Weather is one of the reasons which caused the school bus delay. To have a deeper analysis about this, it is necessary to consider the weather of the day. Since the difference of weather in Manhattan is not large, we used the weather data of Central Park in NYC to represent the weather of Manhattan. Thus, we selected several important variables in the weather dataset to joint. The key variables we used:</p>
-<p><code>prcp</code>: precipitation (tenths of mm) <code>snow</code>: snowfall (mm) <code>snwd</code>: snow depth (mm) <code>tmax</code>: maximum temperature (tenths of degrees C) <code>tmin</code>: Minimum temperature (tenth of degrees C)</p>
+<p><code>prcp</code>: precipitation (tenths of mm)</p>
+<p><code>snow</code>: snowfall (mm)</p>
+<p><code>snwd</code>: snow depth (mm)</p>
+<p><code>tmax</code>: maximum temperature (tenths of degrees C)</p>
+<p><code>tmin</code>: Minimum temperature (tenth of degrees C)</p>
 </div>
 <div id="opt-code" class="section level5">
 <h5>OPT code:</h5>
 <p>In school bus breakdown and delay data frame, we can see the school serviced variable, but it actually just provides the OPT code instead of the concrete names and addresses. Thus, we collected OPT code list of NYC from Data World. The key variable we used:</p>
-<p><code>OPT_Code</code>: OPT code. <code>Name</code>: School names. <code>Longitude</code>: Longitude on the map <code>Latitude</code>: Latitude on the map</p>
+<p><code>OPT_Code</code>: OPT code.</p>
+<p><code>Name</code>: School names.</p>
+<p><code>Longitude</code>: Longitude on the map.</p>
+<p><code>Latitude</code>: Latitude on the map.</p>
 <p>To further figure out whether there is any specific distribution or relationship, we converted the date and added the variables month and weekday in the process of cleaning data.</p>
-<p><code>Month</code>: months (January to December) <code>Weekday</code>: weekdays (Monday to Sunday)</p>
+<p><code>Month</code>: months (January to December)</p>
+<p><code>Weekday</code>: weekdays (Monday to Sunday)</p>
 <div class="figure" style="text-align: center">
 <img src="image/4.webp" alt="TRAFFIC JAM" width="50%" />
 <p class="caption">
@@ -355,7 +368,7 @@ TRAFFIC JAM
 </div>
 <div id="mapping" class="section level2">
 <h2>Mapping</h2>
-<p>We considered the geolocation of schools in New York city from 2015 to 2019. Compared with other areas, schools in Manhattan have more delays in school buses, and the time of delays are longer. Therefore our project is mainly for schools in Manhattan. Data in these geolocation and density heatmap plots helped identify certain neighborhoods in Manhattan that appear to have more and longer delays and they include East Harlem and Lower East Side, as well as the Hudson Yards.</p>
+<p>We considered the geolocation of schools in New York city from 2015 to 2019. The reason we use four years data is that opt codes data set is incomplete for each year.Compared with other areas, schools in Manhattan have more delays in school buses, and the time of delays are longer. Therefore our project is mainly for schools in Manhattan. Data in these geolocation and density heatmap plots helped identify certain neighborhoods in Manhattan that appear to have more and longer delays and they include East Harlem and Lower East Side, as well as the Hudson Yards.</p>
 </div>
 <div id="delay-trend-of-school-bus" class="section level2">
 <h2>Delay Trend of School Bus</h2>
