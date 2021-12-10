@@ -12,7 +12,7 @@ navbar:
     - text: 'Analysis'
       menu:
         - text: 'Exploration'
-          href: test_zhl.html
+          href: Data-analysis_Test.html
         - text: 'Modeling'
           href: regression.html 
     - text: "Report"
