@@ -36,13 +36,13 @@ Sys.setlocale("LC_TIME", "English")
 
 ## School Bus Delay Frequency and Time over School Years in Manhattan
 
-On this page we will give you a bird-eye-view of school bus delay in Manhattan from 2018 Fall to 2021 Fall. We aims to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid data which will be interesting to look at ! Now lets dive right into it!
+On this page, we will give you a bird-eye-view of school bus delays in Manhattan from 2018 Fall to 2021 Fall. We aim to explore the trends of the school bus delay occurrence and delay time over the school years. The time period we chose includes both pre and post covid-19 data which will be interesting to look at! Now let's dive right into it!
 
 
 
 # Daily Delay Counts : from 9/15/2018 - 11/18/2021
 
-First,we would like to get a general view of the frequency of school bus delay in Manhattan from the fall semester 2018 to most recently. As we can see from the plot below, Covid-19 has a huge impact on the school bus delay over the time. Before the pandemic(2018-2020), we can see that the school buses are more likely to delay in the fall semester than the spring semesters especially during December and January. This may be caused by extreme weather in the winter and the heavy traffic during holiday seasons.In 2020-2021 when most schools switched online to cope with the pandemic , we can see there is striking low school bus delay. This is not hard to understand given there are less school bus route running and less cars on streets due to lock down and social distancing. In the fall of 2021, schools are switching back to in-person mode with the effort of vaccine enforcement and all other precautions taken, the school bus delay has a similar distribution as the pre-pandemic distribution.
+First, we would like to get a general view of the frequency of school bus delays in Manhattan from the fall semester of 2018 to most recently. As we can see from the plot below, Covid-19 has a huge impact on the school bus delay over time. Before the pandemic(2018-2020), we can see that the school buses are more likely to delay in the fall semester than the spring semesters, especially during December and January. This may be caused by extreme weather in the winter and the heavy traffic during holiday seasons. In 2020-2021 when most schools switched online to cope with the pandemic, we can see there is striking low school bus delay. This is not hard to understand given there are fewer school bus routes running and fewer cars on streets due to lock down and social distancing. In the fall of 2021, schools are switching back to in-person mode with the effort of vaccine enforcement and all other precautions taken, the school bus delay has a similar distribution as the pre-pandemic distribution.
 
 
 ```{r, message = FALSE}
@@ -79,7 +79,7 @@ plot_df %>%
 
 Now we want to take a closer look at the counts of school bus delay in each month and compare the school years over 2018 to 2021.
 
-First we can see that except for the 2020-2021 school year , we have a similar trend for school bus delay distribution from January to December. The school bus delay is more frequent in the winter from November to the Next February. The frequency of school bus delay is decreasing in number over the years. We are happy tp see that the NY school bus system is improving on the overall level. The school bus system is probability shut down or has limited routes operating given the lock down in 2020-2021. There is less than 100 delays each month in those days.
+Firstly, we can see that except for the 2020-2021 school year, we have a similar trend for school bus delay distribution from January to December. The school bus delay is more frequent in the winter from November to the next February. The frequency of school bus delays is decreasing in number over the years. We are happy to see that the NY school bus system is improving on the overall level. The school bus system is probability shut down or has limited routes operating given the lockdown in 2020-2021. There are less than 100 delays each month on those days.
 
 ```{r, message = FALSE}
 #overlaping each year's daily delay counts
@@ -111,7 +111,7 @@ ggplotly(overlaping_plot)
 
 ##  Distribution of Delay Times in Each School Year
 
-Except for the frequency of school bus delay, students like us also care about the delay time of the school bus. Surprisingly, we see that the most majority delays take about 31 - 45 minuets before the pandemic.Though we have lower frequency of bus delay after the pandemic, the majority of the bus delay takes about 46-60 minuets. For Student, this might not be as bad as it looks.The overall probability of being late due to school bus delay should decrease, though they may be late for a longer period of time given each delay they run into.
+Except for the frequency of school bus delays, students like us also care about the delay time of the school bus. Surprisingly, we see that the most majority delay take about 31 - 45 minutes before the pandemic. Though we have a lower frequency of bus delay after the pandemic, the majority of the bus delay takes about 46-60 minutes. For students, this might not be as bad as it looks. The overall probability of being late due to school bus delays should decrease, though they may be late for a longer period of time given each delay they run into.
 
 ```{r, message = FALSE}
 
@@ -137,7 +137,7 @@ lets now overlap the school bus delay counts within each school year
 
 ## Monthly Distribution of The Five Different Types of School Bus Delay
 
-In the fourth plot, we tried to figure out whether there would be a monthly rule for each type of school bus delay. We need to analyze the school bus delay type by type. Overall, 31-45-minute school bus delays and 46-60-minute school bus delays make up the majority part of the total number of school bus delays. For all kinds of school bus delays in the three academic years, the number of delays increases from September to October for all the three academic years. Then, after October, the number of school bus delay decreased first and then kept fluctuating for all types of school bus delays.  All kinds of school bus delays will reach the second peak in either January or February. The 0-15-minute delay, 16-30-minute delay, and 31-45-minute delay are more frequent than usual in May. 31-45-minute delay and 46-60-minute delay are more frequent than usual in March. Thus, October, January, February, March, and May are more probable to encounter school bus delays than else months in a year. 
+In the fourth plot, we tried to figure out whether there would be a monthly rule for each type of school bus delay. We need to analyze the school bus delay type by type. Overall, 31-45-minute school bus delays and 46-60-minute school bus delays make up the majority part of the total number of school bus delays. For all kinds of school bus delays in the three academic years, the number of delays increases from September to October for all the three academic years. Then, after October, the number of school bus delays decreased first and then kept fluctuating for all types of school bus delays.  All kinds of school bus delays will reach the second peak in either January or February. The 0-15-minute delay, 16-30-minute delay, and 31-45-minute delay are more frequent than usual in May. 31-45-minute delay and 46-60-minute delay are more frequent than usual in March. Thus, October, January, February, March, and May are more probable to encounter school bus delays than else months in a year. 
 ```{r, message = FALSE}
 df_date_weather_na = 
   df %>%
@@ -172,7 +172,7 @@ ggplotly(p1)
 ## Weekly Distribution of The Five Different Types of School Bus Delay
 
 
-In the fifth plot, we are curious about if there is any rule related to bus delay in each week. We tried to figure out which weekday will be more probable to encounter a bus delay and generally how long the delay will be. According to the result, there isn’t any rule about that. Encountering a school bus delay is almost equivalently frequent in each school day. In 2018-2019 academic year and 2019-2020 academic year, the three most frequent types of school bus delays are 31-45 minutes, 46-60 minutes, and 16-30 minutes in turn.  In 2020-2021 academic year, the three most frequent types of school bus delays are 46-60 minutes, 31-45 minutes, and 16-30 minutes in turn. 
+In the fifth plot, we are curious about if there is any rule related to bus delay in each week. We tried to figure out which weekday will be more probable to encounter a bus delay and generally how long the delay will be. According to the result, there isn’t any rule about that. Encountering a school bus delay is almost equivalently frequent in each school day. In the 2018-2019 academic year and the 2019-2020 academic year, the three most frequent types of school bus delays are 31-45 minutes, 46-60 minutes, and 16-30 minutes in turn.  In the 2020-2021 academic year, the three most frequent types of school bus delays are 46-60 minutes, 31-45 minutes, and 16-30 minutes in turn. 
 ```{r, message = FALSE}
 df_date_weather_plot2 =
   df_date_weather_na %>%
